@@ -32,9 +32,15 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
         <span className="font-bold text-xl text-blue-900 tracking-tight">ProcureEdge</span>
-        <div className="flex gap-6 text-sm text-gray-500">
+        <div className="flex gap-6 text-sm text-gray-500 items-center">
           <a href="#how" className="hover:text-gray-900 transition-colors">How it works</a>
           <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
+          <a
+            href="/suppliers/new"
+            className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-medium transition-colors"
+          >
+            List your business — $1
+          </a>
         </div>
       </nav>
 

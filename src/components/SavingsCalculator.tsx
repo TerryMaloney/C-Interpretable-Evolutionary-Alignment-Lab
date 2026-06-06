@@ -8,9 +8,10 @@ const fmt = (n: number) => '$' + Math.round(n).toLocaleString();
 interface Props {
   stats: PriceStats;
   query: string;
+  onSpendChange?: (spend: number) => void;
 }
 
-export default function SavingsCalculator({ stats, query }: Props) {
+export default function SavingsCalculator({ stats, query, onSpendChange }: Props) {
   const [raw, setRaw] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -45,7 +46,11 @@ export default function SavingsCalculator({ stats, query }: Props) {
             <input
               type="text"
               value={raw}
-              onChange={(e) => setRaw(e.target.value)}
+              onChange={(e) => {
+                setRaw(e.target.value);
+                const v = parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0;
+                onSpendChange?.(v);
+              }}
               placeholder="e.g. 85,000"
               className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
             />
