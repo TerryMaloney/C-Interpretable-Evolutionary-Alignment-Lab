@@ -19,7 +19,7 @@
     "@deck.gl/aggregation-layers": "^9.0.0",
     "@deck.gl/geo-layers": "^9.0.0",
     "maplibre-gl": "^4.7.0",
-    "@vis.gl/react-maplibre": "^1.2.0",
+    "@vis.gl/react-maplibre": "^8.1.0",
     "@duckdb/duckdb-wasm": "^1.29.0",
     "apache-arrow": "^17.0.0",
     "zustand": "^4.5.0",
