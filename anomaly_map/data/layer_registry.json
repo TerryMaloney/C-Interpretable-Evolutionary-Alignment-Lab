@@ -74,6 +74,46 @@
       "fetch_script": "scripts/fetch/fetch_nuclear_facilities.py",
       "processed_file": "data/processed/nuclear_facilities.geojson"
     },
+    "firms_thermal": {
+      "name": "NASA FIRMS Thermal Anomaly Archive",
+      "tier": 1,
+      "confidence": 4,
+      "category": "thermal",
+      "description": "VIIRS/MODIS thermal detections filtered to unexplained high-confidence nighttime events",
+      "fetch_script": "scripts/fetch/fetch_firms.py",
+      "processed_file": "data/processed/firms_thermal.geojson",
+      "notes": "Filter: HIGH confidence, nighttime, non-industrial, non-fire-season only"
+    },
+    "dart_buoys": {
+      "name": "NOAA DART Buoy Network (Ocean Pressure)",
+      "tier": 1,
+      "confidence": 4,
+      "category": "ocean",
+      "description": "DART deep-ocean tsunami detection buoy locations and pressure anomalies",
+      "fetch_script": "scripts/fetch/fetch_dart_buoys.py",
+      "processed_file": "data/processed/dart_buoys.geojson",
+      "notes": "Anomaly target: pressure spikes not correlated with seismic events"
+    },
+    "gps_tec": {
+      "name": "GPS-TEC Ionospheric Disturbance (IONEX)",
+      "tier": 1,
+      "confidence": 4,
+      "category": "ionospheric",
+      "description": "Total electron content anomalies from NASA CDDIS global ionosphere maps",
+      "fetch_script": "scripts/fetch/fetch_gps_tec.py",
+      "processed_file": "data/processed/gps_tec.geojson",
+      "notes": "After Kp/Dst correction and seismogenic TEC removal"
+    },
+    "sentinel5p_atmos": {
+      "name": "ESA Sentinel-5P Atmospheric Chemistry",
+      "tier": 1,
+      "confidence": 4,
+      "category": "atmospheric",
+      "description": "TROPOMI SO2/NO2/CH4 column density anomalies over hotspot zones",
+      "fetch_script": "scripts/fetch/fetch_sentinel5p.py",
+      "processed_file": "data/processed/sentinel5p_atmos.geojson",
+      "notes": "Anomaly target: plumes not correlated with known industrial sources"
+    },
     "cattle_mutilations": {
       "name": "Cattle Mutilation Cases",
       "tier": 2,
@@ -140,6 +180,46 @@
       "fetch_script": null,
       "processed_file": "data/processed/uso_incidents.geojson"
     },
+    "ctbto_infrasound": {
+      "name": "CTBTO IMS Infrasound Station Network",
+      "tier": 2,
+      "confidence": 3,
+      "category": "acoustic",
+      "description": "CTBTO monitoring station coordinates; event bulletins where public",
+      "fetch_script": "scripts/fetch/fetch_ctbto_infrasound.py",
+      "processed_file": "data/processed/ctbto_infrasound.geojson",
+      "notes": "Station coordinates public; waveform data restricted to member states"
+    },
+    "grace_gravity": {
+      "name": "NASA GRACE Gravity Anomaly",
+      "tier": 2,
+      "confidence": 3,
+      "category": "geophysical",
+      "description": "Temporal gravity field variations from GRACE/GRACE-FO satellites",
+      "fetch_script": "scripts/fetch/fetch_grace_gravity.py",
+      "processed_file": "data/processed/grace_gravity.geojson",
+      "notes": "300-400km spatial resolution; use as corroboration for magnetic anomaly zones"
+    },
+    "vlf_elf": {
+      "name": "VLF/ELF Electromagnetic Emissions",
+      "tier": 2,
+      "confidence": 2,
+      "category": "em_disturbance",
+      "description": "Stanford VLF / WWLLN EM burst data — data licensing required",
+      "fetch_script": "scripts/fetch/fetch_vlf_elf.py",
+      "processed_file": "data/processed/vlf_elf.geojson",
+      "notes": "STUB: WWLLN requires licensing agreement. HAARP location included as known source."
+    },
+    "goes_gravity_waves": {
+      "name": "NOAA GOES IR Atmospheric Gravity Waves",
+      "tier": 2,
+      "confidence": 2,
+      "category": "atmospheric",
+      "description": "Concentric wave patterns in GOES water vapor imagery without known meteorological cause",
+      "fetch_script": "scripts/fetch/fetch_goes_ir.py",
+      "processed_file": "data/processed/goes_gravity_waves.geojson",
+      "notes": "Raster pipeline; requires time-lapse analysis. Lower priority than 18-21."
+    },
     "indigenous_sacred_sites": {
       "name": "Indigenous Sacred Sites",
       "tier": 3,
@@ -158,6 +238,26 @@
       "fetch_script": null,
       "processed_file": "data/processed/submarine_cable_disruptions.geojson",
       "notes": "Phase 2 addition; lower priority"
+    },
+    "faa_airspace": {
+      "name": "FAA Special Use Airspace (Control Mask)",
+      "tier": 1,
+      "confidence": 5,
+      "category": "mask",
+      "description": "Restricted, prohibited, warning airspace polygons for military activity masking",
+      "fetch_script": "scripts/fetch/fetch_faa_airspace.py",
+      "processed_file": "data/processed/faa_airspace.geojson",
+      "notes": "Used as exclusion mask: UAP clusters inside SUA may be classified testing"
+    },
+    "nighttime_lights": {
+      "name": "NOAA VIIRS Nighttime Lights (Industrial Mask)",
+      "tier": 1,
+      "confidence": 5,
+      "category": "mask",
+      "description": "Annual VIIRS nighttime light composites for industrial activity masking",
+      "fetch_script": "scripts/fetch/fetch_nighttime_lights.py",
+      "processed_file": "data/processed/nighttime_lights.geojson",
+      "notes": "Used as industrial/population density mask for thermal anomaly filtering"
     }
   },
   "schema": {
@@ -170,6 +270,18 @@
       "2": "Manual / small N / quality varies",
       "1": "Speculative / single source"
     }
+  },
+  "masking_layers": {
+    "industrial": "nighttime_lights",
+    "military_airspace": "faa_airspace"
+  },
+  "analysis_filters": {
+    "population_biased_layers": ["nuforc", "epa_radnet", "doe_grid"],
+    "thermal_filter_layers": ["firms_thermal"],
+    "tier1_crosslayer": ["nuforc", "noaa_ume", "usgs_seismic", "nuclear_facilities", "epa_radnet",
+                         "firms_thermal", "dart_buoys", "gps_tec"],
+    "physics_detection_layers": ["firms_thermal", "dart_buoys", "gps_tec", "sentinel5p_atmos",
+                                 "ctbto_infrasound", "grace_gravity", "vlf_elf", "goes_gravity_waves"]
   },
   "zones_of_interest": {
     "A": {
@@ -191,6 +303,11 @@
       "name": "New Madrid Seismic Zone",
       "bbox": {"min_lat": 33, "max_lat": 38, "min_lon": -94, "max_lon": -88},
       "description": "Intraplate fault system; published EQL / UAP correlation"
+    },
+    "E": {
+      "name": "Western Pacific / Japan Trench System",
+      "bbox": {"min_lat": 30, "max_lat": 45, "min_lon": 130, "max_lon": 150},
+      "description": "Best-documented EQL record on Earth + densest post-Tohoku ocean sensor network. Use as validation zone — if methodology works, signal should be strongest here."
     }
   }
 }
