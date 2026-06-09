@@ -57,6 +57,21 @@ SPRINTS = {
         "description": "Advanced raster analysis (Layers 22, 24, 25)",
         "steps": ["fetch_ctbto_infrasound", "fetch_vlf_elf", "fetch_goes_ir"],
     },
+    7: {
+        "description": "Extended datasets: biological + FOIA + maritime + EM (Layers 26-35)",
+        "steps": [
+            "fetch_movebank",       # Layer 26: animal migration anomalies
+            "fetch_bfro",           # Layer 27: BFRO sighting database
+            "fetch_usgs_mines",     # Layer 28: MRDS mine locations
+            "fetch_faa_wildlife",   # Layer 29: FAA wildlife strike database
+            "fetch_water_wells",    # Layer 30: USGS NWIS groundwater wells
+            "fetch_adsb",           # Layer 31: ADS-B traffic (noise control)
+            "fetch_space_weather",  # Layer 32: NOAA space weather (solar control)
+            "fetch_foia_docs",      # Layer 33: FOIA-derived institutional records
+            "fetch_maritime",       # Layer 34: maritime anomaly incidents
+            "fetch_schumann",       # Layer 35: Schumann resonance / ELF monitoring
+        ],
+    },
 }
 
 MASK_STEPS = ["fetch_faa_airspace", "fetch_nighttime_lights"]
@@ -95,7 +110,7 @@ def get_fetch_module(step_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Anomaly Map Phase 1 Pipeline")
-    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6],
+    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6, 7],
                         help="Run a specific sprint group only")
     parser.add_argument("--masks", action="store_true", help="Run masking layers only")
     parser.add_argument("--fetch", action="store_true", help="Run all fetch steps")

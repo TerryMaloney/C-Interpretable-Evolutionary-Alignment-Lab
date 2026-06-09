@@ -258,6 +258,156 @@
       "fetch_script": "scripts/fetch/fetch_nighttime_lights.py",
       "processed_file": "data/processed/nighttime_lights.geojson",
       "notes": "Used as industrial/population density mask for thermal anomaly filtering"
+    },
+    "movebank_animals": {
+      "name": "Animal Migration Anomalies (Movebank)",
+      "layer_number": 26,
+      "tier": 2,
+      "confidence": 3,
+      "category": "biological",
+      "description": "Documented animal behavioral anomalies and migration course deviations",
+      "fetch_script": "scripts/fetch/fetch_movebank.py",
+      "processed_file": "data/processed/movebank_animals.geojson",
+      "notes": "Curated events + Movebank open studies. Magnetoreceptive species weighted higher."
+    },
+    "bfro_sightings": {
+      "name": "BFRO Anomalous Observation Reports",
+      "layer_number": 27,
+      "tier": 2,
+      "confidence": 2,
+      "category": "anomaly_report",
+      "description": "BFRO Class A/B sightings database filtered to Zone A/B states",
+      "fetch_script": "scripts/fetch/fetch_bfro.py",
+      "processed_file": "data/processed/bfro_sightings.geojson",
+      "notes": "High-N dataset; geographic clustering is the signal, not individual reports"
+    },
+    "usgs_mines": {
+      "name": "USGS Mineral Resources (MRDS) Mine Locations",
+      "layer_number": 28,
+      "tier": 2,
+      "confidence": 4,
+      "category": "subsurface",
+      "description": "USGS MRDS mine database filtered to Zone A/B states; uranium flagged",
+      "fetch_script": "scripts/fetch/fetch_usgs_mines.py",
+      "processed_file": "data/processed/usgs_mines.geojson",
+      "notes": "Underground voids create infrasound channels and gas pathways"
+    },
+    "faa_wildlife_strikes": {
+      "name": "FAA Wildlife Strike Database",
+      "layer_number": 29,
+      "tier": 2,
+      "confidence": 2,
+      "category": "biological",
+      "description": "FAA wildlife-aircraft strikes; magnetoreceptive species elevated",
+      "fetch_script": "scripts/fetch/fetch_faa_wildlife.py",
+      "processed_file": "data/processed/faa_wildlife_strikes.geojson",
+      "notes": "Clustering in low-traffic airspace is residual signal"
+    },
+    "water_wells": {
+      "name": "USGS NWIS Groundwater Monitoring Wells",
+      "layer_number": 30,
+      "tier": 2,
+      "confidence": 4,
+      "category": "subsurface",
+      "description": "USGS NWIS active groundwater monitoring wells + curated anomalous aquifers",
+      "fetch_script": "scripts/fetch/fetch_water_wells.py",
+      "processed_file": "data/processed/water_wells.geojson",
+      "notes": "Anomalous well-level changes in non-drought conditions are signal"
+    },
+    "adsb_traffic": {
+      "name": "ADS-B Aircraft Traffic (Noise Control)",
+      "layer_number": 31,
+      "tier": 1,
+      "confidence": 4,
+      "category": "aviation_control",
+      "description": "OpenSky Network traffic snapshots + ADS-B gap zones + military corridors",
+      "fetch_script": "scripts/fetch/fetch_adsb.py",
+      "processed_file": "data/processed/adsb_traffic.geojson",
+      "notes": "NOISE-REDUCTION: UAP reports co-located with dense traffic are down-weighted"
+    },
+    "space_weather": {
+      "name": "NOAA Space Weather Events (Solar Control)",
+      "layer_number": 32,
+      "tier": 1,
+      "confidence": 5,
+      "category": "solar_control",
+      "description": "NOAA SWPC solar flares, geomagnetic storms, Kp index",
+      "fetch_script": "scripts/fetch/fetch_space_weather.py",
+      "processed_file": "data/processed/space_weather.geojson",
+      "notes": "CONTROL: Events during Kp>=5 storms are DOWN-weighted for anomaly scoring"
+    },
+    "foia_documents": {
+      "name": "FOIA-Derived Institutional UAP Records",
+      "layer_number": 33,
+      "tier": 1,
+      "confidence": 4,
+      "category": "anomaly_report",
+      "description": "Coordinates from declassified government documents: DoD, Navy, Blue Book, AARO",
+      "fetch_script": "scripts/fetch/fetch_foia_docs.py",
+      "processed_file": "data/processed/foia_documents.geojson",
+      "notes": "Highest evidentiary weight anomaly layer — institutionally verified locations"
+    },
+    "maritime_anomalies": {
+      "name": "Maritime Anomaly Incidents",
+      "layer_number": 34,
+      "tier": 2,
+      "confidence": 3,
+      "category": "anomaly_report",
+      "description": "USO encounters, navigation failures, acoustic anomalies, ship disappearances",
+      "fetch_script": "scripts/fetch/fetch_maritime.py",
+      "processed_file": "data/processed/maritime_anomalies.geojson",
+      "notes": "Historical + recent; curated from USCG, Navy, NOAA hydrophone records"
+    },
+    "schumann_resonance": {
+      "name": "Schumann Resonance / ELF Monitoring",
+      "layer_number": 35,
+      "tier": 2,
+      "confidence": 3,
+      "category": "em_field",
+      "description": "Global ELF/SR monitoring stations + curated anomalous resonance events",
+      "fetch_script": "scripts/fetch/fetch_schumann.py",
+      "processed_file": "data/processed/schumann_resonance.geojson",
+      "notes": "Pre-seismic ULF/ELF emissions are documented geophysical precursors"
+    }
+  },
+  "layer_groups": {
+    "geophysical_baselines": {
+      "label": "Geophysical Baselines",
+      "description": "Earth science ground truth — earthquakes, magnetics, radon, gravity",
+      "layers": ["usgs_seismic", "usgs_magnetic", "usgs_radon", "grace_gravity", "usgs_mines", "water_wells"],
+      "default_visible": true
+    },
+    "anomaly_reports": {
+      "label": "Anomaly Reports",
+      "description": "High-N observational datasets — UAP, UME, wildlife, civilian sightings",
+      "layers": ["nuforc", "noaa_ume", "cattle_mutilations", "uso_incidents", "bfro_sightings",
+                 "foia_documents", "maritime_anomalies"],
+      "default_visible": true
+    },
+    "physics_detection": {
+      "label": "Physics-Based Detection",
+      "description": "Instrument-only datasets — no human observers required",
+      "layers": ["firms_thermal", "dart_buoys", "gps_tec", "sentinel5p_atmos",
+                 "ctbto_infrasound", "vlf_elf", "goes_gravity_waves", "schumann_resonance"],
+      "default_visible": false
+    },
+    "biological_sensors": {
+      "label": "Biological Sensors",
+      "description": "Animal behavior as distributed EM/geophysical sensors",
+      "layers": ["noaa_ume", "movebank_animals", "faa_wildlife_strikes", "nav_disruption"],
+      "default_visible": false
+    },
+    "infrastructure_context": {
+      "label": "Infrastructure Context",
+      "description": "Facilities, grid, power, nuclear — known human EM sources",
+      "layers": ["doe_grid", "epa_radnet", "nuclear_facilities", "black_budget_sites"],
+      "default_visible": false
+    },
+    "controls_masks": {
+      "label": "Controls & Masks",
+      "description": "Known confounders used to reduce false positives",
+      "layers": ["space_weather", "adsb_traffic", "nighttime_lights", "faa_airspace"],
+      "default_visible": false
     }
   },
   "schema": {
