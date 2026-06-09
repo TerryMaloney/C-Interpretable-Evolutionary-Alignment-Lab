@@ -417,6 +417,51 @@
       "source_url": "https://www.icanw.org/",
       "record_count": 528,
       "is_control_layer": true
+    },
+    "aatip_physiological": {
+      "name": "AATIP/Vallée Physiological Cases",
+      "tier": 2,
+      "confidence": 3,
+      "category": "uap",
+      "description": "Publicly documented physiological effects on witnesses — AATIP disclosures, Vallée Confrontations, NARCAP pilot reports, Sturrock panel",
+      "fetch_script": "scripts/fetch/fetch_aatip_medical.py",
+      "processed_file": "data/processed/aatip_physiological.geojson",
+      "layer_number": 38,
+      "source_url": "https://www.narcap.org/",
+      "record_count": 19,
+      "is_control_layer": false,
+      "notes": "No private medical data. All records from published, citable sources."
+    },
+    "belgian_triangle_wave": {
+      "name": "Belgian Triangle Wave 1989-1990",
+      "tier": 1,
+      "confidence": 5,
+      "category": "uap",
+      "description": "~2,600 reports over Belgium/Germany/Netherlands. Belgian Air Force radar intercept confirmed. SOBEPS two-volume investigation. Government-acknowledged case.",
+      "fetch_script": "scripts/fetch/fetch_belgian_triangle.py",
+      "processed_file": "data/processed/belgian_triangle_wave.geojson",
+      "layer_number": 44,
+      "source_url": "https://www.sobeps.org/",
+      "record_count": 12,
+      "is_control_layer": false,
+      "has_radar_confirmation": true,
+      "has_government_acknowledgment": true
+    },
+    "cefaa_cases": {
+      "name": "Chilean CEFAA Official UAP Cases",
+      "tier": 1,
+      "confidence": 5,
+      "category": "uap",
+      "description": "Official Chilean government aeronautical investigation agency (DGAC/CEFAA). Cases vetted by aeronautical, meteorological, and photographic experts. Includes radar-confirmed encounters.",
+      "fetch_script": "scripts/fetch/fetch_cefaa.py",
+      "processed_file": "data/processed/cefaa_cases.geojson",
+      "layer_number": 48,
+      "source_url": "http://www.dgac.gob.cl/",
+      "record_count": 12,
+      "is_control_layer": false,
+      "has_radar_confirmation": true,
+      "has_government_acknowledgment": true,
+      "jurisdiction": "Chilean airspace + sovereign territory"
     }
   },
   "layer_groups": {
@@ -445,7 +490,10 @@
         "foia_documents",
         "maritime_anomalies",
         "bluebook_unknowns",
-        "geipan_cat_d"
+        "geipan_cat_d",
+        "belgian_triangle_wave",
+        "cefaa_cases",
+        "aatip_physiological"
       ],
       "default_visible": true
     },

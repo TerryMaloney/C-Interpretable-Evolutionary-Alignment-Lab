@@ -99,9 +99,9 @@
 - [x] Layer 42: `fetch_geipan.py` — French GEIPAN Category D unexplained cases
 - [x] Layer 52: `fetch_solar_cycle.py` — Solar cycle vs. UAP timeline (computed correlation layer)
 - [x] Layer 53: `fetch_nuclear_tests.py` — Atmospheric nuclear test dates (528 tests, 1945-1980)
-- [ ] Layer 38/39: `fetch_aatip_medical.py` — AATIP medical cases + Vallée physiological database
-- [ ] Layer 44: `fetch_belgian_triangle.py` — Belgian triangle wave 1989-1990 (SOBEPS, ~2,000 reports)
-- [ ] Layer 48: `fetch_cefaa.py` — Chilean CEFAA official UAP investigation cases
+- [x] Layer 38/39: `fetch_aatip_medical.py` — AATIP medical cases + Vallée physiological database
+- [x] Layer 44: `fetch_belgian_triangle.py` — Belgian triangle wave 1989-1990 (SOBEPS, ~2,600 reports, F-16 radar confirmed)
+- [x] Layer 48: `fetch_cefaa.py` — Chilean CEFAA official UAP investigation cases
 
 ### App — Priority Features (Claude Packet)
 - [x] React Router — routes: /, /map, /z/:zoneSlug, /about, /sources, /feedback
@@ -117,16 +117,17 @@
 - [x] Sources page (`/sources`)
 - [x] Feedback page (`/feedback`)
 - [x] Public hotspot pages (`/z/:zoneSlug`) with OpenGraph meta
-- [ ] Investigation presets (Clean Signal Hunt, Skeptic Mode, Physical Effects, Low-Report Weirdness)
-- [ ] Event deduplication / incident grouping fields (`incident_group_id`, `report_count`)
-- [ ] Keyword-derived tags (`secondary_effect_tags`, `physical_effect_score`)
-- [ ] Bias/confound flags per event
+- [x] Investigation presets (Clean Signal Hunt, Skeptic Mode, Physical Effects, Low-Report Weirdness) — `PresetsPanel.jsx`
+- [x] Event deduplication / incident grouping (`incident_group_id`, `report_count`) — `scripts/process/tag_events.py`
+- [x] Keyword-derived tags (`secondary_effect_tags`, `physical_effect_score`) — `scripts/process/tag_events.py`
+- [x] Bias/confound flags per event (`confound_flags`) — `scripts/process/tag_events.py`
 
 ### Architecture
 - [x] `docs/FEEDBACK_TRIAGE_AGENT.md` — LLM triage agent design doc
 - [x] `scripts/build/build_pmtiles.py` — PMTiles build script for large layer datasets
-- [x] `layer_registry.json` — layers 36-53 metadata
-- [x] `run_phase1.py` — Sprint 8 steps
+- [x] `layer_registry.json` — layers 38-53 metadata (44 total layers)
+- [x] `run_phase1.py` — Sprint 8 steps (aatip, belgian_triangle, cefaa, bluebook, geipan, solar, nuclear)
+- [x] `scripts/process/tag_events.py` — keyword tagging + deduplication pass
 
 ---
 

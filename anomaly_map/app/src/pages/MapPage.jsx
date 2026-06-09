@@ -5,6 +5,7 @@ import Map from '../components/Map.jsx';
 import LayerPanel from '../components/LayerPanel.jsx';
 import DetailPanel from '../components/DetailPanel.jsx';
 import MapHeader from '../components/MapHeader.jsx';
+import PresetsPanel from '../components/PresetsPanel.jsx';
 import LoadingOverlay from '../components/LoadingOverlay.jsx';
 import styles from './MapPage.module.css';
 
@@ -111,7 +112,10 @@ export default function MapPage() {
 
       <RotatingReminder />
 
-      <MapHeader />
+      <div className={styles.headerRow}>
+        <MapHeader />
+        <PresetsPanel />
+      </div>
 
       <div className={styles.body}>
         <LayerPanel />

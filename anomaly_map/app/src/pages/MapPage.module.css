@@ -87,6 +87,24 @@
   flex-shrink: 0;
 }
 
+.headerRow {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+}
+
+.headerRow > *:first-child {
+  flex: 1;
+  border-bottom: none;
+}
+
+.headerRow > *:last-child {
+  padding: 6px 10px;
+  border-left: 1px solid var(--border);
+}
+
 .body {
   display: flex;
   flex: 1;

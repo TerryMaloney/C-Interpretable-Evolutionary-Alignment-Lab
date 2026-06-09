@@ -73,8 +73,11 @@ SPRINTS = {
         ],
     },
     8: {
-        "description": "Advanced investigation: historical + foreign gov + temporal (Layers 40-53)",
+        "description": "Advanced investigation: historical + foreign gov + temporal (Layers 38-53)",
         "steps": [
+            "fetch_aatip_medical",      # Layer 38/39: AATIP medical + Vallée physiological
+            "fetch_belgian_triangle",   # Layer 44: Belgian triangle wave 1989-1990 (SOBEPS)
+            "fetch_cefaa",              # Layer 48: Chilean CEFAA official UAP cases
             "fetch_bluebook",           # Layer 40: Project Blue Book Unknown cases (701)
             "fetch_geipan",             # Layer 42: French GEIPAN Category D (~700 cases)
             "fetch_solar_cycle",        # Layer 52: Solar cycle vs. UAP timeline (computed)
@@ -177,11 +180,13 @@ def main():
     if run_all or args.process or (args.sprint == 5):
         from scripts.process import geocode_manual
         from scripts.process import normalize_all
+        from scripts.process import tag_events
         from scripts.process import merge_layers
 
         process_steps = [
             ("geocode_manual", geocode_manual.main),
             ("normalize_all", normalize_all.main),
+            ("tag_events", tag_events.main),
             ("merge_layers", merge_layers.main),
         ]
         for name, fn in process_steps:

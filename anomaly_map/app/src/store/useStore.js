@@ -12,7 +12,8 @@ const LAYER_GROUPS = {
   anomaly_reports: {
     label: 'Anomaly Reports',
     layers: ['nuforc', 'noaa_ume', 'cattle_mutilations', 'uso_incidents', 'bfro_sightings',
-             'foia_documents', 'maritime_anomalies'],
+             'foia_documents', 'maritime_anomalies', 'bluebook_unknowns', 'geipan_cat_d',
+             'belgian_triangle_wave', 'cefaa_cases', 'aatip_physiological'],
     defaultVisible: true,
     color: '#ff4455',
   },
@@ -37,9 +38,97 @@ const LAYER_GROUPS = {
   },
   controls_masks: {
     label: 'Controls & Masks',
-    layers: ['space_weather', 'adsb_traffic', 'nighttime_lights', 'faa_airspace'],
+    layers: ['space_weather', 'adsb_traffic', 'nighttime_lights', 'faa_airspace',
+             'solar_cycle_correlation', 'atmospheric_nuclear_tests'],
     defaultVisible: false,
     color: '#606078',
+  },
+};
+
+// Investigation presets — curated layer + filter combinations for specific research modes
+export const INVESTIGATION_PRESETS = {
+  clean_signal: {
+    id: 'clean_signal',
+    label: 'Clean Signal Hunt',
+    icon: '🔬',
+    description: 'Tier 1 physics layers only. No self-report data. Highest signal:noise.',
+    visibleLayers: new Set([
+      'usgs_seismic', 'usgs_magnetic', 'usgs_radon', 'grace_gravity',
+      'firms_thermal', 'dart_buoys', 'gps_tec', 'sentinel5p_atmos',
+      'ctbto_infrasound', 'doe_grid', 'epa_radnet',
+    ]),
+    filters: {
+      minConfidence: 4,
+      hideMilitary: true,
+      hideSolar: true,
+      hideIndustrial: true,
+    },
+    mapView: 'convergence',
+    sortMode: 'residual',
+    convergenceRadius: 50,
+  },
+  skeptic: {
+    id: 'skeptic',
+    label: 'Skeptic Mode',
+    icon: '⚖',
+    description: 'All confound layers ON. Shows what disappears after controls applied.',
+    visibleLayers: new Set([
+      'usgs_seismic', 'usgs_magnetic', 'usgs_radon',
+      'nuforc', 'noaa_ume', 'bfro_sightings',
+      'faa_airspace', 'nighttime_lights', 'adsb_traffic',
+      'space_weather', 'solar_cycle_correlation', 'atmospheric_nuclear_tests',
+      'nuclear_facilities', 'doe_grid',
+    ]),
+    filters: {
+      minConfidence: 1,
+      hideMilitary: false,
+      hideSolar: false,
+      hideIndustrial: false,
+    },
+    mapView: 'heatmap',
+    sortMode: 'confounded',
+    convergenceRadius: 100,
+  },
+  physical_effects: {
+    id: 'physical_effects',
+    label: 'Physical Effects',
+    icon: '⚡',
+    description: 'Cases with documented physical traces: radar, FLIR, physiological, material.',
+    visibleLayers: new Set([
+      'bluebook_unknowns', 'geipan_cat_d', 'belgian_triangle_wave',
+      'cefaa_cases', 'aatip_physiological', 'foia_documents',
+      'usgs_seismic', 'usgs_magnetic', 'usgs_radon',
+      'epa_radnet', 'doe_grid',
+    ]),
+    filters: {
+      minConfidence: 3,
+      hideMilitary: false,
+      hideSolar: true,
+      hideIndustrial: false,
+    },
+    mapView: 'layers',
+    sortMode: 'convergence',
+    convergenceRadius: 75,
+  },
+  low_report_weirdness: {
+    id: 'low_report_weirdness',
+    label: 'Low-Report Weirdness',
+    icon: '🌐',
+    description: 'Physical instrument anomalies in low-population areas. No self-report bias.',
+    visibleLayers: new Set([
+      'dart_buoys', 'gps_tec', 'ctbto_infrasound', 'schumann_resonance',
+      'usgs_seismic', 'usgs_magnetic', 'vlf_elf', 'goes_gravity_waves',
+      'movebank_animals', 'faa_wildlife_strikes',
+    ]),
+    filters: {
+      minConfidence: 3,
+      hideMilitary: true,
+      hideSolar: true,
+      hideIndustrial: true,
+    },
+    mapView: 'convergence',
+    sortMode: 'low_report',
+    convergenceRadius: 50,
   },
 };
 
@@ -95,6 +184,7 @@ export const useStore = create(
     loadingMessage: '',
     error: null,
     sortMode: 'convergence',  // convergence | residual | confounded | low_report | physical
+    activePreset: null,        // id of active investigation preset, or null
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filters: {
@@ -160,6 +250,24 @@ export const useStore = create(
     setError: (error) => set({ error }),
 
     setSortMode: (mode) => set({ sortMode: mode }),
+
+    applyPreset: (presetId) => {
+      const preset = INVESTIGATION_PRESETS[presetId];
+      if (!preset) {
+        set({ activePreset: null });
+        return;
+      }
+      set(state => ({
+        activePreset: presetId,
+        visibleLayers: new Set(preset.visibleLayers),
+        mapView: preset.mapView || state.mapView,
+        sortMode: preset.sortMode || state.sortMode,
+        convergenceRadius: preset.convergenceRadius || state.convergenceRadius,
+        filters: { ...state.filters, ...preset.filters },
+      }));
+    },
+
+    clearPreset: () => set({ activePreset: null }),
 
     // Used by URL sync to restore layer state from URL params
     setVisibleLayersFromUrl: (layerSet) => set({ visibleLayers: layerSet }),
