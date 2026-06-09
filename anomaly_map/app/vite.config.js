@@ -10,7 +10,7 @@ export default defineConfig({
     headers: {
       // Required for SharedArrayBuffer (DuckDB-WASM + Apache Arrow)
       'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Embedder-Policy': 'credentialless',
     },
   },
   build: {

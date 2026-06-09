@@ -3,6 +3,7 @@ import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer, HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import { Map as MapLibre } from '@vis.gl/react-maplibre';
+import maplibregl from 'maplibre-gl';
 import { useStore, MAP_VIEWS } from '../store/useStore.js';
 import { buildFlatFeatures, cScoreToColor, getCategoryColor } from '../utils/layers.js';
 import styles from './Map.module.css';
@@ -151,6 +152,7 @@ export default function Map() {
         }}
       >
         <MapLibre
+          mapLib={maplibregl}
           mapStyle={MAP_STYLE}
           attributionControl={false}
           reuseMaps
