@@ -1,0 +1,196 @@
+{
+  "layers": {
+    "nuforc": {
+      "name": "UAP Sightings (NUFORC)",
+      "tier": 1,
+      "confidence": 4,
+      "category": "uap",
+      "description": "National UFO Reporting Center sightings database",
+      "fetch_script": "scripts/fetch/fetch_nuforc.py",
+      "processed_file": "data/processed/nuforc.geojson"
+    },
+    "noaa_ume": {
+      "name": "NOAA Marine Mammal Unusual Mortality Events",
+      "tier": 1,
+      "confidence": 5,
+      "category": "marine",
+      "description": "NOAA Fisheries UME stranding locations",
+      "fetch_script": "scripts/fetch/fetch_noaa_ume.py",
+      "processed_file": "data/processed/noaa_ume.geojson"
+    },
+    "doe_grid": {
+      "name": "DOE Power Grid Disturbance Reports (OE-417)",
+      "tier": 1,
+      "confidence": 4,
+      "category": "em_disturbance",
+      "description": "US DOE grid disturbance incidents",
+      "fetch_script": "scripts/fetch/fetch_doe_grid.py",
+      "processed_file": "data/processed/doe_grid.geojson"
+    },
+    "usgs_seismic": {
+      "name": "USGS Earthquake Catalog",
+      "tier": 1,
+      "confidence": 5,
+      "category": "geophysical",
+      "description": "USGS FDSN earthquake catalog M2.5+ for continental US",
+      "fetch_script": "scripts/fetch/fetch_usgs_seismic.py",
+      "processed_file": "data/processed/usgs_seismic.geojson"
+    },
+    "usgs_magnetic": {
+      "name": "USGS North American Magnetic Anomaly Grid",
+      "tier": 1,
+      "confidence": 5,
+      "category": "geophysical",
+      "description": "Continental magnetic anomaly gridded dataset (GeoTIFF)",
+      "fetch_script": "scripts/fetch/fetch_usgs_magnetic.py",
+      "processed_file": "data/processed/usgs_magnetic_summary.geojson",
+      "raster_file": "data/raw/usgs_magnetic/NAMAG.tif",
+      "notes": "Primary data is raster; summary GeoJSON contains anomaly zones"
+    },
+    "usgs_radon": {
+      "name": "USGS Geologic Radon Potential Map",
+      "tier": 1,
+      "confidence": 4,
+      "category": "geophysical",
+      "description": "County/province level radon potential across continental US",
+      "fetch_script": "scripts/fetch/fetch_usgs_radon.py",
+      "processed_file": "data/processed/usgs_radon.geojson"
+    },
+    "epa_radnet": {
+      "name": "EPA RadNet Radiation Monitoring Network",
+      "tier": 1,
+      "confidence": 4,
+      "category": "radiation",
+      "description": "EPA RadNet station locations and historical anomaly readings",
+      "fetch_script": "scripts/fetch/fetch_epa_radnet.py",
+      "processed_file": "data/processed/epa_radnet.geojson"
+    },
+    "nuclear_facilities": {
+      "name": "Nuclear Facility Locations (NRC + DOE)",
+      "tier": 1,
+      "confidence": 5,
+      "category": "infrastructure",
+      "description": "Licensed nuclear reactors and DOE weapons-related sites",
+      "fetch_script": "scripts/fetch/fetch_nuclear_facilities.py",
+      "processed_file": "data/processed/nuclear_facilities.geojson"
+    },
+    "cattle_mutilations": {
+      "name": "Cattle Mutilation Cases",
+      "tier": 2,
+      "confidence": 2,
+      "category": "anomalous_incident",
+      "description": "Documented cattle mutilation cases (forensic anomaly cases only)",
+      "fetch_script": null,
+      "processed_file": "data/processed/cattle_mutilations.geojson",
+      "notes": "Manual geocoding; see data/manual/cattle_mutilations.csv"
+    },
+    "earthquake_lights": {
+      "name": "Earthquake Light (EQL) Documented Cases",
+      "tier": 2,
+      "confidence": 3,
+      "category": "earth_lights",
+      "description": "Published EQL database from Thériault et al. 2014 and USGS",
+      "fetch_script": null,
+      "processed_file": "data/processed/earthquake_lights.geojson",
+      "notes": "Manual geocoding from published case lists"
+    },
+    "persistent_earth_lights": {
+      "name": "Persistent Earth Light / Spooklight Locations",
+      "tier": 2,
+      "confidence": 3,
+      "category": "earth_lights",
+      "description": "Known persistent anomalous light locations globally",
+      "fetch_script": null,
+      "processed_file": "data/processed/persistent_earth_lights.geojson",
+      "notes": "Manual dataset; confidence varies per site"
+    },
+    "black_budget_sites": {
+      "name": "Black Budget / Government Research Sites",
+      "tier": 2,
+      "confidence": 3,
+      "category": "infrastructure",
+      "description": "Confirmed or strongly evidenced classified research locations",
+      "fetch_script": null,
+      "processed_file": "data/processed/black_budget_sites.geojson"
+    },
+    "skyquakes": {
+      "name": "Skyquake / Unexplained Boom Clusters",
+      "tier": 2,
+      "confidence": 2,
+      "category": "acoustic",
+      "description": "Geographic clusters of unexplained atmospheric booms",
+      "fetch_script": null,
+      "processed_file": "data/processed/skyquakes.geojson"
+    },
+    "nav_disruption": {
+      "name": "Marine Mammal / Bird Navigation Disruption Events",
+      "tier": 2,
+      "confidence": 3,
+      "category": "nav_disruption",
+      "description": "Bird banding vagrancy spikes and cetacean navigation failures",
+      "fetch_script": null,
+      "processed_file": "data/processed/nav_disruption.geojson"
+    },
+    "uso_incidents": {
+      "name": "USO / Transmedium Incident Locations",
+      "tier": 2,
+      "confidence": 2,
+      "category": "uap",
+      "description": "Undersea/transmedium UAP incident locations",
+      "fetch_script": null,
+      "processed_file": "data/processed/uso_incidents.geojson"
+    },
+    "indigenous_sacred_sites": {
+      "name": "Indigenous Sacred Sites",
+      "tier": 3,
+      "confidence": 2,
+      "category": "historical",
+      "description": "Pre-scientific persistent observation sites; potential long-term EM/geophysical markers",
+      "fetch_script": null,
+      "processed_file": "data/processed/indigenous_sacred_sites.geojson"
+    },
+    "submarine_cable_disruptions": {
+      "name": "Submarine Cable Disruption Events",
+      "tier": 3,
+      "confidence": 2,
+      "category": "infrastructure",
+      "description": "Anomalous submarine cable failures (non-anchor, non-fishing causes)",
+      "fetch_script": null,
+      "processed_file": "data/processed/submarine_cable_disruptions.geojson",
+      "notes": "Phase 2 addition; lower priority"
+    }
+  },
+  "schema": {
+    "required_fields": ["id", "layer", "lat", "lon"],
+    "optional_fields": ["datetime", "confidence", "category", "source", "notes"],
+    "confidence_scale": {
+      "5": "Peer-reviewed / government primary source",
+      "4": "Official secondary source / large N dataset",
+      "3": "Published but contested / medium N",
+      "2": "Manual / small N / quality varies",
+      "1": "Speculative / single source"
+    }
+  },
+  "zones_of_interest": {
+    "A": {
+      "name": "Rocky Mountain Rift Corridor",
+      "bbox": {"min_lat": 30, "max_lat": 45, "min_lon": -112, "max_lon": -104},
+      "description": "Rio Grande Rift, San Luis Valley, Skinwalker Ranch, Los Alamos/Sandia"
+    },
+    "B": {
+      "name": "Southern California Offshore",
+      "bbox": {"min_lat": 29, "max_lat": 35, "min_lon": -121, "max_lon": -116},
+      "description": "Santa Catalina Channel, active submarine faults, USO hotspot"
+    },
+    "C": {
+      "name": "Hessdalen Valley (Control Site)",
+      "bbox": {"min_lat": 62.5, "max_lat": 63.2, "min_lon": 10.8, "max_lon": 11.6},
+      "description": "Best-studied analog; solved geophysical light phenomenon"
+    },
+    "D": {
+      "name": "New Madrid Seismic Zone",
+      "bbox": {"min_lat": 33, "max_lat": 38, "min_lon": -94, "max_lon": -88},
+      "description": "Intraplate fault system; published EQL / UAP correlation"
+    }
+  }
+}

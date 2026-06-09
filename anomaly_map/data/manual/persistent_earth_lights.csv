@@ -1,0 +1,11 @@
+lat,lon,datetime,source,notes,confidence,category
+62.85,11.20,,Project Hessdalen / NTNU,Hessdalen Valley Norway — 40yr instrumented study 188 sightings in one week 1984. VLF survey confirmed sulfide mineral deposit geometry. Best-studied analog site. RADAR confirmed.,5,earth_lights
+30.30,-104.02,,Marfa TX municipal + research,Marfa Lights TX — Viewing platform established. Some events explained (car headlights). Unexplained subset documented on moonless nights predating highway. Mitchell Flat.,3,earth_lights
+35.97,-81.88,,Brown Mountain NC historical record,Brown Mountain Lights NC — Reports pre-1913 before automobile era. Multiple USGS investigations inconclusive. Linville Gorge fault zone proximity.,3,earth_lights
+46.60,-120.50,,Yakima Lights WA / Greg Long research,Yakima Lights WA — Research station 1970s-80s. Yakima Indian Reservation. Coincides with topographic saddle above fault system. Greg Long documented.,3,earth_lights
+-22.00,139.50,,Australian accounts,Min Min Lights Australia — Queensland outback persistent reports. Bioluminescence and refraction explanations proposed but disputed by long-distance reports.,2,earth_lights
+46.35,-89.07,,Michigan local investigation,Paulding Light MI — Largely explained as car headlight refraction on US-45. Retain in dataset flagged conventional.,2,earth_lights
+33.92,-93.15,,Arkansas local accounts,Gurdon Light AR — Railroad ghost light. Some refraction explanation proposed. Persistent reports for 100+ years.,2,earth_lights
+51.32,-105.83,,Saskatchewan historical record,St. Louis Light Saskatchewan — CNR railway line. Multiple witnesses including RCMP. Refraction explanation proposed but witnesses describe light behavior inconsistent.,3,earth_lights
+36.6,-121.9,,Monterey Bay area accounts,Monterey Bay CA persistent marine lights — USO-adjacent underwater light reports coinciding with Monterey Canyon submarine fault system.,2,earth_lights
+35.5,-106.0,,New Mexico high desert observers,Jemez Mountains NM — Persistent light phenomena near Los Alamos / Rio Grande Rift. Consistent with EQL mechanism.,3,earth_lights

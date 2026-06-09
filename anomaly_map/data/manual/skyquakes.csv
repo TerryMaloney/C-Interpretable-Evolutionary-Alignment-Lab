@@ -1,0 +1,11 @@
+lat,lon,datetime,source,notes,confidence,category
+35.5,-76.0,,USGS Seneca Guns documentation,Seneca Guns NC/VA coast — Persistent unexplained booms. USGS documented. No seismic signature in most cases. Possible shallow marine sources.,3,acoustic
+22.7,90.4,,Historical record / scientific literature,Barisal Guns Bangladesh — Historical persistent booms. Documented in scientific literature. Ganges delta sediment liquefaction proposed.,2,acoustic
+51.0,3.5,,European historical accounts,Mistpouffers Belgium/Netherlands — Historical North Sea coast booms. Coastal atmospheric effects proposed but incomplete explanation.,2,acoustic
+44.6,-88.8,2012-03-19,USGS / Wisconsin Geological Survey,Clintonville WI 2012 swarm — Four consecutive nights of booms. USGS seismograph showed tiny tremors. Cause officially undetermined.,4,acoustic
+28.5,-81.4,2018-12-11,USGS / local media,Brevard County FL — Booms reported coincident with military exercise. SpaceX Falcon 9 sonic boom trajectory confirmed in some events.,3,acoustic
+37.8,-122.0,2019-06-18,USGS / Bay Area accounts,East Bay CA booms — Multiple reports no seismic correlation. Possible military aircraft.,2,acoustic
+47.6,-122.3,2020-03-04,USGS / Seattle Metro,Seattle WA post-quake booms — Following M3.9 but some booms without seismic match. Puget Lowland geology.,3,acoustic
+34.1,-118.3,2015-04-09,Edwards AFB confirmation delayed,Los Angeles CA booms — F-35B test flight confirmed by Edwards AFB after media inquiry. Classified exercise timing.,2,acoustic
+32.7,-117.2,2019-04-09,US Navy statement,San Diego CA — Multiple booms confirmed as USS Ronald Reagan strike group exercises.,3,acoustic
+42.4,-71.1,2021-01-11,USGS / Massachusetts emergency calls,Boston MA area booms — Multiple 911 calls no seismic signal. Cause undetermined.,2,acoustic

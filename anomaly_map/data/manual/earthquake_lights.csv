@@ -1,0 +1,16 @@
+lat,lon,datetime,source,notes,confidence,category
+41.9,12.5,1783-02-05,Thériault et al. 2014 SRL,Calabria Italy earthquake M6.9 lights reported preceding quake. Classic EQL case.,4,earth_lights
+46.6,13.8,1976-05-06,Thériault et al. 2014 SRL,Friuli Italy M6.5 earthquake lights reported by multiple witnesses along fault.,4,earth_lights
+36.2,1.4,1980-10-10,Thériault et al. 2014 SRL,El Asnam Algeria M7.3 earthquake lights preceding main shock documented in scientific literature.,4,earth_lights
+37.6,-118.9,1986-07-21,USGS / Thériault et al.,Chalfant Valley CA M6.2 earthquake lights reported over Long Valley Caldera.,4,earth_lights
+35.7,-97.5,1952-04-09,USGS historical,Oklahoma EQL case — intraplate event. Central US.,3,earth_lights
+41.7,-112.8,1934-03-12,USGS historical,Hansel Valley UT EQL — documented ground luminescence at fault scarps.,4,earth_lights
+44.1,-113.2,1983-10-28,USGS / Borah Peak,Borah Peak ID M7.3 earthquake lights reported by multiple observers near epicenter.,4,earth_lights
+47.7,-122.5,2001-02-28,USGS / Nisqually quake,Nisqually WA M6.8 earthquake lights reported over Puget Sound — subduction zone.,3,earth_lights
+37.2,-122.0,1906-04-18,USGS historical,San Francisco earthquake M7.9 — fire and light phenomena along fault rupture zone.,3,earth_lights
+36.0,-120.4,1989-10-17,USGS / Loma Prieta,Loma Prieta CA M6.9 earthquake lights reported near epicenter Santa Cruz Mountains.,4,earth_lights
+40.8,-73.9,1884-08-10,USGS historical,New York-New Jersey M5.0 — intraplate event with light reports. Eastern seaboard.,3,earth_lights
+36.1,-89.9,1811-12-16,USGS historical,New Madrid Seismic Zone M7.7+ — extensive light phenomena in eyewitness accounts,4,earth_lights
+36.2,-89.5,1812-01-23,USGS historical,New Madrid second major shock M7.5 — lights reported over Missouri bootheel,4,earth_lights
+36.5,-89.6,1812-02-07,USGS historical,New Madrid largest event M7.7 — lights booms and ground luminescence widespread,4,earth_lights
+62.9,11.2,2014-07-15,Project Hessdalen / NTNU,Hessdalen Valley Norway low-level seismic activity coincident with light observations,3,earth_lights
