@@ -94,6 +94,7 @@ export const useStore = create(
     isLoading: false,
     loadingMessage: '',
     error: null,
+    sortMode: 'convergence',  // convergence | residual | confounded | low_report | physical
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filters: {
@@ -157,6 +158,11 @@ export const useStore = create(
     setLoading: (isLoading, message = '') => set({ isLoading, loadingMessage: message }),
 
     setError: (error) => set({ error }),
+
+    setSortMode: (mode) => set({ sortMode: mode }),
+
+    // Used by URL sync to restore layer state from URL params
+    setVisibleLayersFromUrl: (layerSet) => set({ visibleLayers: layerSet }),
 
     updateFilter: (key, value) => set(state => ({
       filters: { ...state.filters, [key]: value },

@@ -129,7 +129,7 @@
       "tier": 2,
       "confidence": 3,
       "category": "earth_lights",
-      "description": "Published EQL database from Thériault et al. 2014 and USGS",
+      "description": "Published EQL database from Th\u00e9riault et al. 2014 and USGS",
       "fetch_script": null,
       "processed_file": "data/processed/earthquake_lights.geojson",
       "notes": "Manual geocoding from published case lists"
@@ -205,7 +205,7 @@
       "tier": 2,
       "confidence": 2,
       "category": "em_disturbance",
-      "description": "Stanford VLF / WWLLN EM burst data — data licensing required",
+      "description": "Stanford VLF / WWLLN EM burst data \u2014 data licensing required",
       "fetch_script": "scripts/fetch/fetch_vlf_elf.py",
       "processed_file": "data/processed/vlf_elf.geojson",
       "notes": "STUB: WWLLN requires licensing agreement. HAARP location included as known source."
@@ -345,7 +345,7 @@
       "description": "Coordinates from declassified government documents: DoD, Navy, Blue Book, AARO",
       "fetch_script": "scripts/fetch/fetch_foia_docs.py",
       "processed_file": "data/processed/foia_documents.geojson",
-      "notes": "Highest evidentiary weight anomaly layer — institutionally verified locations"
+      "notes": "Highest evidentiary weight anomaly layer \u2014 institutionally verified locations"
     },
     "maritime_anomalies": {
       "name": "Maritime Anomaly Incidents",
@@ -368,51 +368,152 @@
       "fetch_script": "scripts/fetch/fetch_schumann.py",
       "processed_file": "data/processed/schumann_resonance.geojson",
       "notes": "Pre-seismic ULF/ELF emissions are documented geophysical precursors"
+    },
+    "bluebook_unknowns": {
+      "name": "Project Blue Book Unknowns",
+      "tier": 2,
+      "confidence": 4,
+      "category": "uap",
+      "description": "701 official 'Unknown' cases from USAF Project Blue Book (1947-1969)",
+      "fetch_script": "scripts/fetch/fetch_bluebook.py",
+      "processed_file": "data/processed/bluebook_unknowns.geojson",
+      "layer_number": 40,
+      "source_url": "http://www.nicap.org/bluebook/index.htm",
+      "record_count": 701
+    },
+    "geipan_cat_d": {
+      "name": "French GEIPAN Category D Cases",
+      "tier": 1,
+      "confidence": 5,
+      "category": "uap",
+      "description": "CNES GEIPAN Category D (unexplained after rigorous investigation) ~700 cases",
+      "fetch_script": "scripts/fetch/fetch_geipan.py",
+      "processed_file": "data/processed/geipan_cat_d.geojson",
+      "layer_number": 42,
+      "source_url": "https://www.cnes-geipan.fr/",
+      "record_count": 700
+    },
+    "solar_cycle_correlation": {
+      "name": "Solar Cycle vs. UAP Timeline",
+      "tier": 2,
+      "confidence": 4,
+      "category": "computed",
+      "description": "Computed correlation layer: SILSO solar cycle data vs. known UAP flap periods",
+      "fetch_script": "scripts/fetch/fetch_solar_cycle.py",
+      "processed_file": "data/processed/solar_cycle_correlation.geojson",
+      "layer_number": 52,
+      "source_url": "https://www.sidc.be/silso/datafiles",
+      "is_control_layer": true
+    },
+    "atmospheric_nuclear_tests": {
+      "name": "Atmospheric Nuclear Tests (1945-1980)",
+      "tier": 2,
+      "confidence": 5,
+      "category": "nuclear",
+      "description": "528 atmospheric nuclear tests; temporal correlation with UAP flap periods",
+      "fetch_script": "scripts/fetch/fetch_nuclear_tests.py",
+      "processed_file": "data/processed/atmospheric_nuclear_tests.geojson",
+      "layer_number": 53,
+      "source_url": "https://www.icanw.org/",
+      "record_count": 528,
+      "is_control_layer": true
     }
   },
   "layer_groups": {
     "geophysical_baselines": {
       "label": "Geophysical Baselines",
-      "description": "Earth science ground truth — earthquakes, magnetics, radon, gravity",
-      "layers": ["usgs_seismic", "usgs_magnetic", "usgs_radon", "grace_gravity", "usgs_mines", "water_wells"],
+      "description": "Earth science ground truth \u2014 earthquakes, magnetics, radon, gravity",
+      "layers": [
+        "usgs_seismic",
+        "usgs_magnetic",
+        "usgs_radon",
+        "grace_gravity",
+        "usgs_mines",
+        "water_wells"
+      ],
       "default_visible": true
     },
     "anomaly_reports": {
       "label": "Anomaly Reports",
-      "description": "High-N observational datasets — UAP, UME, wildlife, civilian sightings",
-      "layers": ["nuforc", "noaa_ume", "cattle_mutilations", "uso_incidents", "bfro_sightings",
-                 "foia_documents", "maritime_anomalies"],
+      "description": "High-N observational datasets \u2014 UAP, UME, wildlife, civilian sightings",
+      "layers": [
+        "nuforc",
+        "noaa_ume",
+        "cattle_mutilations",
+        "uso_incidents",
+        "bfro_sightings",
+        "foia_documents",
+        "maritime_anomalies",
+        "bluebook_unknowns",
+        "geipan_cat_d"
+      ],
       "default_visible": true
     },
     "physics_detection": {
       "label": "Physics-Based Detection",
-      "description": "Instrument-only datasets — no human observers required",
-      "layers": ["firms_thermal", "dart_buoys", "gps_tec", "sentinel5p_atmos",
-                 "ctbto_infrasound", "vlf_elf", "goes_gravity_waves", "schumann_resonance"],
+      "description": "Instrument-only datasets \u2014 no human observers required",
+      "layers": [
+        "firms_thermal",
+        "dart_buoys",
+        "gps_tec",
+        "sentinel5p_atmos",
+        "ctbto_infrasound",
+        "vlf_elf",
+        "goes_gravity_waves",
+        "schumann_resonance"
+      ],
       "default_visible": false
     },
     "biological_sensors": {
       "label": "Biological Sensors",
       "description": "Animal behavior as distributed EM/geophysical sensors",
-      "layers": ["noaa_ume", "movebank_animals", "faa_wildlife_strikes", "nav_disruption"],
+      "layers": [
+        "noaa_ume",
+        "movebank_animals",
+        "faa_wildlife_strikes",
+        "nav_disruption"
+      ],
       "default_visible": false
     },
     "infrastructure_context": {
       "label": "Infrastructure Context",
-      "description": "Facilities, grid, power, nuclear — known human EM sources",
-      "layers": ["doe_grid", "epa_radnet", "nuclear_facilities", "black_budget_sites"],
+      "description": "Facilities, grid, power, nuclear \u2014 known human EM sources",
+      "layers": [
+        "doe_grid",
+        "epa_radnet",
+        "nuclear_facilities",
+        "black_budget_sites"
+      ],
       "default_visible": false
     },
     "controls_masks": {
       "label": "Controls & Masks",
       "description": "Known confounders used to reduce false positives",
-      "layers": ["space_weather", "adsb_traffic", "nighttime_lights", "faa_airspace"],
+      "layers": [
+        "space_weather",
+        "adsb_traffic",
+        "nighttime_lights",
+        "faa_airspace",
+        "solar_cycle_correlation",
+        "atmospheric_nuclear_tests"
+      ],
       "default_visible": false
     }
   },
   "schema": {
-    "required_fields": ["id", "layer", "lat", "lon"],
-    "optional_fields": ["datetime", "confidence", "category", "source", "notes"],
+    "required_fields": [
+      "id",
+      "layer",
+      "lat",
+      "lon"
+    ],
+    "optional_fields": [
+      "datetime",
+      "confidence",
+      "category",
+      "source",
+      "notes"
+    ],
     "confidence_scale": {
       "5": "Peer-reviewed / government primary source",
       "4": "Official secondary source / large N dataset",
@@ -426,38 +527,85 @@
     "military_airspace": "faa_airspace"
   },
   "analysis_filters": {
-    "population_biased_layers": ["nuforc", "epa_radnet", "doe_grid"],
-    "thermal_filter_layers": ["firms_thermal"],
-    "tier1_crosslayer": ["nuforc", "noaa_ume", "usgs_seismic", "nuclear_facilities", "epa_radnet",
-                         "firms_thermal", "dart_buoys", "gps_tec"],
-    "physics_detection_layers": ["firms_thermal", "dart_buoys", "gps_tec", "sentinel5p_atmos",
-                                 "ctbto_infrasound", "grace_gravity", "vlf_elf", "goes_gravity_waves"]
+    "population_biased_layers": [
+      "nuforc",
+      "epa_radnet",
+      "doe_grid"
+    ],
+    "thermal_filter_layers": [
+      "firms_thermal"
+    ],
+    "tier1_crosslayer": [
+      "nuforc",
+      "noaa_ume",
+      "usgs_seismic",
+      "nuclear_facilities",
+      "epa_radnet",
+      "firms_thermal",
+      "dart_buoys",
+      "gps_tec"
+    ],
+    "physics_detection_layers": [
+      "firms_thermal",
+      "dart_buoys",
+      "gps_tec",
+      "sentinel5p_atmos",
+      "ctbto_infrasound",
+      "grace_gravity",
+      "vlf_elf",
+      "goes_gravity_waves"
+    ]
   },
   "zones_of_interest": {
     "A": {
       "name": "Rocky Mountain Rift Corridor",
-      "bbox": {"min_lat": 30, "max_lat": 45, "min_lon": -112, "max_lon": -104},
+      "bbox": {
+        "min_lat": 30,
+        "max_lat": 45,
+        "min_lon": -112,
+        "max_lon": -104
+      },
       "description": "Rio Grande Rift, San Luis Valley, Skinwalker Ranch, Los Alamos/Sandia"
     },
     "B": {
       "name": "Southern California Offshore",
-      "bbox": {"min_lat": 29, "max_lat": 35, "min_lon": -121, "max_lon": -116},
+      "bbox": {
+        "min_lat": 29,
+        "max_lat": 35,
+        "min_lon": -121,
+        "max_lon": -116
+      },
       "description": "Santa Catalina Channel, active submarine faults, USO hotspot"
     },
     "C": {
       "name": "Hessdalen Valley (Control Site)",
-      "bbox": {"min_lat": 62.5, "max_lat": 63.2, "min_lon": 10.8, "max_lon": 11.6},
+      "bbox": {
+        "min_lat": 62.5,
+        "max_lat": 63.2,
+        "min_lon": 10.8,
+        "max_lon": 11.6
+      },
       "description": "Best-studied analog; solved geophysical light phenomenon"
     },
     "D": {
       "name": "New Madrid Seismic Zone",
-      "bbox": {"min_lat": 33, "max_lat": 38, "min_lon": -94, "max_lon": -88},
+      "bbox": {
+        "min_lat": 33,
+        "max_lat": 38,
+        "min_lon": -94,
+        "max_lon": -88
+      },
       "description": "Intraplate fault system; published EQL / UAP correlation"
     },
     "E": {
       "name": "Western Pacific / Japan Trench System",
-      "bbox": {"min_lat": 30, "max_lat": 45, "min_lon": 130, "max_lon": 150},
-      "description": "Best-documented EQL record on Earth + densest post-Tohoku ocean sensor network. Use as validation zone — if methodology works, signal should be strongest here."
+      "bbox": {
+        "min_lat": 30,
+        "max_lat": 45,
+        "min_lon": 130,
+        "max_lon": 150
+      },
+      "description": "Best-documented EQL record on Earth + densest post-Tohoku ocean sensor network. Use as validation zone \u2014 if methodology works, signal should be strongest here."
     }
   }
 }

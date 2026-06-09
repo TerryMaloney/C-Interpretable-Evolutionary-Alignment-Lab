@@ -1,0 +1,132 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(10, 10, 20, 0.95);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+  flex-shrink: 0;
+  z-index: 10;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.header::-webkit-scrollbar { display: none; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.logo {
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+}
+
+.title {
+  font-size: 0.80rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.views {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.viewBtn {
+  padding: 4px 9px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  border-radius: 4px;
+  font-size: 0.70rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.viewBtn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.viewBtn.active {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.zones {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.zoneBtn {
+  width: 24px;
+  height: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.5);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all 0.15s;
+}
+
+.zoneBtn:hover {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.sortSelect {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sortSelect:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+}
+
+.overlayToggle {
+  padding: 4px 9px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.5);
+  border-radius: 4px;
+  font-size: 0.70rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.overlayToggle:hover,
+.overlayToggle.active {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}

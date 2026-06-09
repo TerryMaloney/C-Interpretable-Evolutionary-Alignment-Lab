@@ -304,3 +304,184 @@
   color: var(--text-secondary);
   word-break: break-all;
 }
+
+/* Score block (replaces old .cscore block) */
+.scoreBlock {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scoreRow {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.scorePill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.scoreNum {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.scoreTag {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* Claim Level badge */
+.claimBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.claimNum {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.claimDesc {
+  font-size: 10px;
+}
+
+.claim1 { background: rgba(140,140,140,0.12); color: #888; }
+.claim2 { background: rgba(100,160,255,0.12); color: #64a0ff; }
+.claim3 { background: rgba(100,200,255,0.12); color: #64c8ff; }
+.claim4 { background: rgba(80,255,160,0.12);  color: #50ffa0; }
+.claim5 { background: rgba(255,210,0,0.12);   color: #ffd200; }
+.claim6 { background: rgba(255,100,200,0.12); color: #ff64c8; }
+
+/* Noise factors */
+.noiseFactors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.noiseFactor {
+  font-size: 9px;
+  padding: 1px 6px;
+  background: rgba(255,80,80,0.12);
+  color: #ff8080;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+
+/* Radius row */
+.radiusRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.radiusLabel { flex: 1; }
+.radiusMeta { color: var(--text-muted); font-family: var(--font-mono); }
+
+/* Reality checks */
+.checksToggle {
+  width: 100%;
+  padding: 5px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.checksToggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.realityChecks {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+.checkTitle {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.checkRow {
+  display: grid;
+  grid-template-columns: 16px 1fr 14px;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 2px 0;
+}
+
+.checkIcon {
+  font-size: 9px;
+  text-align: center;
+}
+
+.checkLabel { color: var(--text-secondary); }
+.checkStatus { text-align: right; font-family: var(--font-mono); font-size: 10px; }
+.checkNote {
+  grid-column: 2 / 4;
+  font-size: 9px;
+  color: var(--text-muted);
+  padding-left: 4px;
+  font-style: italic;
+}
+
+.check_pass  .checkStatus { color: #50ff78; }
+.check_warn  .checkStatus { color: #ffb400; }
+.check_unknown .checkStatus { color: #555; }
+.check_pass  .checkLabel { color: rgba(255,255,255,0.65); }
+.check_warn  .checkLabel { color: rgba(255,200,100,0.80); }
+.check_unknown .checkLabel { color: rgba(255,255,255,0.40); }
+
+/* Feedback links */
+.feedbackLinks {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.feedbackLink {
+  font-size: 10px;
+  color: rgba(255,255,255,0.30);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.feedbackLink:hover { color: var(--accent-cyan); }

@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
+    "react-router-dom": "^6.26.0",
     "deck.gl": "^9.0.0",
     "@deck.gl/core": "^9.0.0",
     "@deck.gl/layers": "^9.0.0",

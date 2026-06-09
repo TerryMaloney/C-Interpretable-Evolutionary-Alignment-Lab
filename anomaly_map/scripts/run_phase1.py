@@ -72,6 +72,15 @@ SPRINTS = {
             "fetch_schumann",       # Layer 35: Schumann resonance / ELF monitoring
         ],
     },
+    8: {
+        "description": "Advanced investigation: historical + foreign gov + temporal (Layers 40-53)",
+        "steps": [
+            "fetch_bluebook",           # Layer 40: Project Blue Book Unknown cases (701)
+            "fetch_geipan",             # Layer 42: French GEIPAN Category D (~700 cases)
+            "fetch_solar_cycle",        # Layer 52: Solar cycle vs. UAP timeline (computed)
+            "fetch_nuclear_tests",      # Layer 53: Atmospheric nuclear test dates (528 tests)
+        ],
+    },
 }
 
 MASK_STEPS = ["fetch_faa_airspace", "fetch_nighttime_lights"]
@@ -110,7 +119,7 @@ def get_fetch_module(step_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Anomaly Map Phase 1 Pipeline")
-    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6, 7],
+    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6, 7, 8],
                         help="Run a specific sprint group only")
     parser.add_argument("--masks", action="store_true", help="Run masking layers only")
     parser.add_argument("--fetch", action="store_true", help="Run all fetch steps")
