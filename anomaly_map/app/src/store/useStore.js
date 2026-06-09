@@ -13,7 +13,8 @@ const LAYER_GROUPS = {
     label: 'Anomaly Reports',
     layers: ['nuforc', 'noaa_ume', 'cattle_mutilations', 'uso_incidents', 'bfro_sightings',
              'foia_documents', 'maritime_anomalies', 'bluebook_unknowns', 'geipan_cat_d',
-             'belgian_triangle_wave', 'cefaa_cases', 'aatip_physiological'],
+             'belgian_triangle_wave', 'cefaa_cases', 'aatip_physiological',
+             'foo_fighters_wwii', 'operation_prato'],
     defaultVisible: true,
     color: '#ff4455',
   },
@@ -35,6 +36,12 @@ const LAYER_GROUPS = {
     layers: ['doe_grid', 'epa_radnet', 'nuclear_facilities', 'black_budget_sites'],
     defaultVisible: false,
     color: '#ff8844',
+  },
+  computed_derived: {
+    label: 'Computed / Derived',
+    layers: ['uap_behavioral_taxonomy', 'uap_flap_centroids'],
+    defaultVisible: false,
+    color: '#cc88ff',
   },
   controls_masks: {
     label: 'Controls & Masks',

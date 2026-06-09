@@ -134,28 +134,28 @@
 ## Pending — Next Sprints
 
 ### Data Layers (Advanced Packet)
-- [ ] Layer 36: NUFORC Periodicity Analysis (Lomb-Scargle on 75-year dataset)
-- [ ] Layer 37: UAP Behavioral Taxonomy (SCU Zenodo paper, 9 behavioral categories)
-- [ ] Layer 41: WWII Foo Fighter Locations (Rhine Valley + Pacific + Italy, NICAP)
+- [x] Layer 36: `fetch_periodicity.py` — UAP flap period centroids + Lomb-Scargle periodicity analysis
+- [x] Layer 37: `fetch_behavioral_taxonomy.py` — UAP behavioral taxonomy (9 categories, 13 cluster records)
+- [x] Layer 41: `fetch_foo_fighters.py` — WWII Foo Fighter reports (European + Pacific theater, 415th NFS)
 - [ ] Layer 43: UK MOD UAP Files (National Archives NLP extraction, ~2,000 cases)
 - [ ] Layer 45: Soviet SETKA Cases (Stonehill/Mantle, ~300 cases, translation required)
 - [ ] Layer 46: Dalnegorsk Physical Evidence (Hill 611, Soviet Academy analysis)
-- [ ] Layer 47: Brazilian Operation Prato (CBPO, 1977, ~100 cases)
+- [x] Layer 47: `fetch_operation_prato.py` — Brazilian Operation Prato 1977 (FAB investigation, Colares Island)
 - [ ] Layer 49: Witness Career Database (public record + FOIA, ~50 named witnesses)
 - [ ] Layer 50: High-Strangeness Reports (NUFORC NLP classification, ~5,000 tagged)
 - [ ] Layer 51: Pais Patent Filing Locations (USPTO, 4 patents)
 
 ### App — Second Pass
-- [ ] Investigation presets (Clean Signal Hunt, Skeptic Mode, Physical Effects, Low-Report Weirdness)
-- [ ] Event deduplication / incident grouping (incident_group_id, report_count, dedupe_confidence)
-- [ ] Keyword-derived tags (secondary_effect_tags, physical_effect_score)
-- [ ] Bias/confound flags per event (military_confound, coastal_confound, etc.)
-- [ ] Top 10 hotspots list in sidebar
-- [ ] Sorting tabs (Top Convergence, Cleanest Residuals, Most Confounded, Physical Effects)
-- [ ] "Near Me" locator feature
+- [x] Investigation presets (Clean Signal Hunt, Skeptic Mode, Physical Effects, Low-Report Weirdness) — `PresetsPanel.jsx`
+- [x] Event deduplication / incident grouping (incident_group_id, report_count, dedupe_confidence) — `tag_events.py`
+- [x] Keyword-derived tags (secondary_effect_tags, physical_effect_score) — `tag_events.py`
+- [x] Bias/confound flags per event (military_confound, coastal_confound, etc.) — `tag_events.py`
+- [x] Top 10 hotspots list in sidebar — `HotspotsList.jsx` in LayerPanel
+- [x] Sorting tabs (Top Convergence, Cleanest Residuals, Most Confounded, Physical Effects) — MapHeader sort select
+- [x] "Near Me" locator feature — `useNearMe.js` hook + MapHeader button
 - [ ] Custom share images for zone pages
 - [ ] Obscured/Restricted Imagery layer (context layer, not anomaly evidence)
-- [ ] Feedback storage backend (simple JSON or serverless function)
+- [x] Feedback storage backend — `api/submit_feedback.py` (JSONL + Vercel serverless)
 
 ### Analysis
 - [ ] Cross-national geological correlation test (GEIPAN + UK MOD + Soviet + Blue Book + CEFAA)

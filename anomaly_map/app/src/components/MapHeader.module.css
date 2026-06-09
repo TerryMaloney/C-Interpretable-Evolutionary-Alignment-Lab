@@ -130,3 +130,33 @@
   border-color: var(--accent-cyan);
   color: var(--accent-cyan);
 }
+
+.nearMeBtn {
+  padding: 4px 9px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.5);
+  border-radius: 4px;
+  font-size: 0.70rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.nearMeBtn:hover {
+  background: rgba(80, 255, 120, 0.1);
+  border-color: #50ff78;
+  color: #50ff78;
+}
+
+.nearMeBtn.active {
+  background: rgba(80, 255, 120, 0.12);
+  border-color: #50ff78;
+  color: #50ff78;
+}
+
+.nearMeBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

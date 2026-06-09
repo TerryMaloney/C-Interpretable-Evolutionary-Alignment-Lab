@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore.js';
 import { getCategoryColor } from '../utils/layers.js';
+import HotspotsList from './HotspotsList.jsx';
 import styles from './LayerPanel.module.css';
 
 export default function LayerPanel() {
@@ -48,6 +49,9 @@ export default function LayerPanel() {
         <span className={styles.title}>Data Layers</span>
         <button className={styles.closeBtn} onClick={() => setPanelOpen(false)}>✕</button>
       </div>
+
+      {/* Top 10 hotspots */}
+      <HotspotsList />
 
       {/* Confidence filter */}
       <div className={styles.filterRow}>

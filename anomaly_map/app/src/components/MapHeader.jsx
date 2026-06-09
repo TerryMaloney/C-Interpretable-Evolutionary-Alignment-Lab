@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore, MAP_VIEWS } from '../store/useStore.js';
+import { useNearMe } from '../hooks/useNearMe.js';
 import styles from './MapHeader.module.css';
 
 const VIEW_LABELS = {
@@ -31,6 +32,8 @@ export default function MapHeader() {
     showCScoreOverlay, setShowCScoreOverlay,
     sortMode, setSortMode,
   } = useStore();
+
+  const { locate, position, loading: locating, error: locError } = useNearMe();
 
   const flyTo = (center, zoom) => {
     setViewState({ longitude: center[0], latitude: center[1], zoom, pitch: 0, bearing: 0 });
@@ -88,6 +91,15 @@ export default function MapHeader() {
         title="Toggle C-Score convergence grid overlay"
       >
         ⬡ C-Score
+      </button>
+
+      <button
+        className={`${styles.nearMeBtn} ${position ? styles.active : ''}`}
+        onClick={locate}
+        disabled={locating}
+        title={locError || (position ? `At ${position.lat.toFixed(3)}, ${position.lon.toFixed(3)}` : 'Jump to my location')}
+      >
+        {locating ? '…' : position ? '⊙ Near Me' : '◎ Near Me'}
       </button>
     </header>
   );

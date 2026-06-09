@@ -1,0 +1,144 @@
+.section {
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.sectionHeader:hover {
+  background: var(--bg-hover);
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex: 1;
+}
+
+.count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.caret {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+  padding: 8px 14px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.hotspotRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  transition: background 0.1s;
+  width: 100%;
+}
+
+.hotspotRow:hover {
+  background: var(--bg-hover);
+}
+
+.rank {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.hotspotInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.hotspotCoords {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.zoneTag {
+  font-size: 9px;
+  padding: 1px 4px;
+  background: rgba(0, 212, 255, 0.12);
+  color: var(--accent-cyan);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+}
+
+.hotspotMeta {
+  display: flex;
+  gap: 6px;
+  margin-top: 1px;
+}
+
+.layers {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.noise {
+  font-size: 9px;
+  font-family: var(--font-mono);
+}
+
+.scoreCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.cScore {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.scoreTag {
+  font-size: 8px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}

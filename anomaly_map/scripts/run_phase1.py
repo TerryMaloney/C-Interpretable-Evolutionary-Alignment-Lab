@@ -84,6 +84,15 @@ SPRINTS = {
             "fetch_nuclear_tests",      # Layer 53: Atmospheric nuclear test dates (528 tests)
         ],
     },
+    9: {
+        "description": "Classification + WWII + Brazil + periodicity (Layers 36, 37, 41, 47)",
+        "steps": [
+            "fetch_periodicity",        # Layer 36: NUFORC periodicity / UAP flap centroids
+            "fetch_behavioral_taxonomy",# Layer 37: UAP behavioral taxonomy (9 categories)
+            "fetch_foo_fighters",       # Layer 41: WWII Foo Fighter reports
+            "fetch_operation_prato",    # Layer 47: Brazilian Operation Prato 1977
+        ],
+    },
 }
 
 MASK_STEPS = ["fetch_faa_airspace", "fetch_nighttime_lights"]
@@ -122,7 +131,7 @@ def get_fetch_module(step_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Anomaly Map Phase 1 Pipeline")
-    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6, 7, 8],
+    parser.add_argument("--sprint", type=int, choices=[1, 2, 3, 4, 5, 6, 7, 8, 9],
                         help="Run a specific sprint group only")
     parser.add_argument("--masks", action="store_true", help="Run masking layers only")
     parser.add_argument("--fetch", action="store_true", help="Run all fetch steps")

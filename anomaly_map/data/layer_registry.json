@@ -462,6 +462,57 @@
       "has_radar_confirmation": true,
       "has_government_acknowledgment": true,
       "jurisdiction": "Chilean airspace + sovereign territory"
+    },
+    "foo_fighters_wwii": {
+      "name": "WWII Foo Fighter Reports",
+      "tier": 2,
+      "confidence": 4,
+      "category": "uap",
+      "description": "WWII aerial anomaly reports from USAAF, RAF, and USN mission logs. European Theater (415th NFS), Pacific Theater, Italian Theater. Predates Cold War secrecy apparatus.",
+      "fetch_script": "scripts/fetch/fetch_foo_fighters.py",
+      "processed_file": "data/processed/foo_fighters_wwii.geojson",
+      "layer_number": 41,
+      "source_url": "https://www.nicap.org/",
+      "record_count": 13,
+      "is_control_layer": false
+    },
+    "operation_prato": {
+      "name": "Brazilian Operation Prato 1977",
+      "tier": 1,
+      "confidence": 5,
+      "category": "uap",
+      "description": "Brazilian Air Force covert investigation (Operação Prato, 1977). ~100 reports from Colares Island, Pará. Physical injury documentation. Captain Hollanda's 500+ photographs.",
+      "fetch_script": "scripts/fetch/fetch_operation_prato.py",
+      "processed_file": "data/processed/operation_prato.geojson",
+      "layer_number": 47,
+      "source_url": "https://www.ufo.com.br/",
+      "record_count": 8,
+      "is_control_layer": false,
+      "has_government_acknowledgment": true
+    },
+    "uap_behavioral_taxonomy": {
+      "name": "UAP Behavioral Taxonomy (9 categories)",
+      "tier": 3,
+      "confidence": 3,
+      "category": "computed",
+      "description": "Geographic clusters classified by behavioral category (instantaneous acceleration, hypersonic, geometric turns, anti-gravity, dimensional, beam, shape change, formation, EM). Based on SCU/NICAP/NARCAP.",
+      "fetch_script": "scripts/fetch/fetch_behavioral_taxonomy.py",
+      "processed_file": "data/processed/uap_behavioral_taxonomy.geojson",
+      "layer_number": 37,
+      "record_count": 13,
+      "is_control_layer": false
+    },
+    "uap_flap_centroids": {
+      "name": "UAP Flap Period Centroids",
+      "tier": 2,
+      "confidence": 3,
+      "category": "computed",
+      "description": "Geographic centroids of 9 major UAP flap periods (1947–2023) with solar cycle and nuclear test context. Lomb-Scargle periodicity analysis.",
+      "fetch_script": "scripts/fetch/fetch_periodicity.py",
+      "processed_file": "data/processed/uap_flap_centroids.geojson",
+      "layer_number": 36,
+      "record_count": 9,
+      "is_control_layer": false
     }
   },
   "layer_groups": {
@@ -493,7 +544,9 @@
         "geipan_cat_d",
         "belgian_triangle_wave",
         "cefaa_cases",
-        "aatip_physiological"
+        "aatip_physiological",
+        "foo_fighters_wwii",
+        "operation_prato"
       ],
       "default_visible": true
     },
@@ -531,6 +584,15 @@
         "epa_radnet",
         "nuclear_facilities",
         "black_budget_sites"
+      ],
+      "default_visible": false
+    },
+    "computed_derived": {
+      "label": "Computed / Derived",
+      "description": "Classified and aggregated datasets — behavioral taxonomy, periodicity, flap centroids",
+      "layers": [
+        "uap_behavioral_taxonomy",
+        "uap_flap_centroids"
       ],
       "default_visible": false
     },
