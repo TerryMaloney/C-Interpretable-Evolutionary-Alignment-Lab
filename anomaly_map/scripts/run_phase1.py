@@ -206,11 +206,15 @@ def main():
         from scripts.analyze import population_control
         from scripts.analyze import clustering
         from scripts.analyze import correlation
+        from scripts.analyze import alignments
+        from scripts.analyze import ripleys_k
 
         analysis_steps = [
             ("population_control", population_control.main),
             ("clustering", clustering.main),
             ("correlation", correlation.main),
+            ("alignments", alignments.main),
+            ("ripleys_k", ripleys_k.main),
         ]
         for name, fn in analysis_steps:
             results[name] = run_step(name, fn, args.skip)
