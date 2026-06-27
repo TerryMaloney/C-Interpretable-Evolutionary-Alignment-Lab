@@ -169,6 +169,74 @@ ZONE_BBOXES = {
     "zone_a": {"lamin": 30.0, "lamax": 45.0, "lomin": -112.0, "lomax": -104.0},
 }
 
+# ── Transponder-dropout detection (opt-in --track mode) ──────────────────────
+# Honest scope: a single /states/all snapshot can't see a "drop over time". This
+# polls several snapshots and reconstructs per-aircraft tracks to flag aircraft
+# that vanish WHILE AIRBORNE, away from airports and outside already-documented
+# terrain/military ADS-B gaps. Snapshot polling only catches dropouts during the
+# run; historical depth needs the OpenSky authenticated API (free, rate-limited)
+# — see the hook in build_dropout_records().
+ALT_FLOOR_M = 1500.0        # must be this high to count as "airborne", not taxiing
+AIRPORT_RADIUS_KM = 30.0    # within this of a major airport => likely a normal landing
+GAP_RADIUS_KM = 60.0        # within this of a documented gap/corridor => expected, not anomalous
+
+# Major US airports near the coverage zones (public coords) to exclude normal landings.
+MAJOR_AIRPORTS = [
+    (33.94, -118.41), (33.68, -117.87), (32.73, -117.19), (36.08, -115.15),
+    (33.43, -112.01), (39.86, -104.67), (40.79, -111.98), (35.04, -106.61),
+    (32.90, -97.04), (29.98, -95.34), (47.45, -122.31), (37.62, -122.38),
+    (33.64, -84.43), (41.98, -87.90), (38.85, -77.04), (40.64, -73.78),
+    (35.21, -80.94), (33.56, -86.75), (39.30, -94.71), (38.51, -121.49),
+]
+
+
+def haversine_km(lat1, lon1, lat2, lon2):
+    from math import radians, sin, cos, asin, sqrt
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    return 6371.0 * 2 * asin(sqrt(a))
+
+
+def _near_any(lat, lon, points, radius_km):
+    return any(haversine_km(lat, lon, p[0], p[1]) <= radius_km for p in points)
+
+
+def detect_dropouts(snapshots: list[dict], airports=MAJOR_AIRPORTS,
+                    gap_centers=None) -> list[dict]:
+    """Flag aircraft that disappear while airborne, away from airports/gaps.
+
+    snapshots: ordered list (oldest→newest); each is {icao24: {lat, lon, alt, on_ground}}.
+    Returns a list of dropout dicts at the last-known position.
+    """
+    if gap_centers is None:
+        gap_centers = [(g["lat"], g["lon"]) for g in COVERAGE_GAP_ZONES] \
+                      + [(c["lat"], c["lon"]) for c in MILITARY_CORRIDORS]
+    if len(snapshots) < 2:
+        return []
+    last = snapshots[-1]
+    seen = set().union(*[set(s.keys()) for s in snapshots])
+    dropouts = []
+    for icao in seen:
+        if icao in last:
+            continue  # still present at end — not a dropout
+        # last snapshot where this aircraft appeared
+        last_idx = max(i for i, s in enumerate(snapshots) if icao in s)
+        sv = snapshots[last_idx][icao]
+        alt = sv.get("alt")
+        if sv.get("on_ground") or alt is None or alt < ALT_FLOOR_M:
+            continue  # was on the ground / low — a normal landing, not a dropout
+        lat, lon = sv.get("lat"), sv.get("lon")
+        if lat is None or lon is None:
+            continue
+        if _near_any(lat, lon, airports, AIRPORT_RADIUS_KM):
+            continue  # near an airport — likely landed
+        if _near_any(lat, lon, gap_centers, GAP_RADIUS_KM):
+            continue  # inside a documented terrain/military gap — expected
+        dropouts.append({"icao24": icao, "lat": lat, "lon": lon,
+                         "alt_m": alt, "snapshot_index": last_idx})
+    return dropouts
+
 
 def fetch_opensky_zone(zone_name: str, bbox: dict) -> list:
     """Fetch live state vectors for a bounding box from OpenSky Network."""
@@ -291,7 +359,87 @@ def build_corridor_records() -> list[dict]:
     return records
 
 
-def main():
+def build_dropout_records(n_snapshots: int = 6, interval_s: int = 30) -> list[dict]:
+    """Poll OpenSky over a short window and flag transponder-dropout candidates."""
+    import time
+    log.info(f"Track mode: polling {n_snapshots} snapshots × {interval_s}s for dropouts…")
+    zone_snaps = {z: [] for z in ZONE_BBOXES}
+    for round_i in range(n_snapshots):
+        for zone_name, bbox in ZONE_BBOXES.items():
+            states, _ = fetch_opensky_zone(zone_name, bbox)
+            snap = {}
+            for state in states:
+                if len(state) < 17:
+                    continue
+                sv = dict(zip(STATE_FIELDS, state))
+                icao = sv.get("icao24")
+                lat, lon = sv.get("latitude"), sv.get("longitude")
+                if not icao or lat is None or lon is None:
+                    continue
+                alt = sv.get("baro_altitude")
+                snap[icao] = {
+                    "lat": float(lat), "lon": float(lon),
+                    "alt": float(alt) if alt is not None else None,
+                    "on_ground": bool(sv.get("on_ground")),
+                }
+            zone_snaps[zone_name].append(snap)
+        if round_i < n_snapshots - 1:
+            time.sleep(interval_s)
+
+    records = []
+    dt_str = datetime.now(timezone.utc).isoformat()
+    for zone_name, snaps in zone_snaps.items():
+        for d in detect_dropouts(snaps):
+            notes = (
+                f"Transponder dropout candidate ({zone_name}): aircraft {d['icao24']} "
+                f"last seen airborne at {d['alt_m']:.0f} m, then vanished from ADS-B for the "
+                f"rest of the {n_snapshots}-snapshot window — away from airports and documented "
+                "gap zones. Snapshot-window only; NOT confirmed anomalous, just unexplained-by-"
+                "the-obvious. Verify against the OpenSky historical API before drawing conclusions."
+            )
+            records.append(make_record(
+                layer=LAYER, lat=d["lat"], lon=d["lon"], datetime_str=dt_str,
+                confidence=2, category=CATEGORY,
+                source="OpenSky Network (polled track analysis)", notes=notes,
+                extra={
+                    "icao24": d["icao24"], "callsign": None, "origin_country": None,
+                    "velocity_ms": None, "altitude_m": d["alt_m"],
+                    "record_subtype": "transponder_dropout",
+                },
+            ))
+    # NOTE: for depth beyond this run, query the OpenSky authenticated /tracks or
+    # /flights endpoints (free account, rate-limited) and feed detect_dropouts().
+    log.info(f"Track mode: {len(records)} transponder-dropout candidate(s)")
+    return records
+
+
+def selftest() -> int:
+    """Synthetic test of detect_dropouts() — no network required."""
+    print("=== fetch_adsb.py dropout self-test ===")
+    far = (44.0, -108.0)      # remote Wyoming — far from all airports + gap zones
+    lax = (33.94, -118.41)    # near a major airport
+    nellis = (37.7, -116.8)   # inside a documented gap zone
+    snaps = [
+        {  # t0
+            "AAA": {"lat": far[0], "lon": far[1], "alt": 9000, "on_ground": False},
+            "BBB": {"lat": far[0] + 1, "lon": far[1] + 1, "alt": 9500, "on_ground": False},
+            "CCC": {"lat": lax[0], "lon": lax[1], "alt": 2000, "on_ground": False},
+            "DDD": {"lat": nellis[0], "lon": nellis[1], "alt": 8000, "on_ground": False},
+            "EEE": {"lat": far[0] - 2, "lon": far[1] - 2, "alt": 100, "on_ground": True},
+        },
+        {  # t1 — BBB/CCC/DDD/EEE vanish; AAA stays
+            "AAA": {"lat": far[0], "lon": far[1], "alt": 9000, "on_ground": False},
+        },
+        {"AAA": {"lat": far[0], "lon": far[1], "alt": 9000, "on_ground": False}},  # t2
+    ]
+    flagged = sorted(d["icao24"] for d in detect_dropouts(snaps))
+    print(f"  flagged: {flagged}")
+    ok = flagged == ["BBB"]
+    print("=== PASS ===" if ok else "=== FAIL (expected ['BBB']) ===")
+    return 0 if ok else 1
+
+
+def main(track: bool = False, n_snapshots: int = 6, interval_s: int = 30):
     log.info("=== fetch_adsb.py (Layer 31 — NOISE REDUCTION) ===")
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -306,6 +454,9 @@ def main():
     records.extend(build_gap_records())
     records.extend(build_corridor_records())
 
+    if track:
+        records.extend(build_dropout_records(n_snapshots, interval_s))
+
     log.info(f"Total ADS-B records: {len(records)}")
     gj = records_to_geojson(records)
     save_geojson(gj, OUT_PATH)
@@ -313,4 +464,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description="ADS-B fetch + transponder-dropout detection")
+    parser.add_argument("--track", type=int, default=0,
+                        help="Enable dropout detection: number of snapshots to poll (e.g. 6)")
+    parser.add_argument("--interval", type=int, default=30, help="Seconds between snapshots")
+    parser.add_argument("--selftest", action="store_true", help="Run the synthetic dropout test")
+    args = parser.parse_args()
+    if args.selftest:
+        sys.exit(selftest())
+    main(track=args.track > 0, n_snapshots=args.track or 6, interval_s=args.interval)

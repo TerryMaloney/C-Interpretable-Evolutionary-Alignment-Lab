@@ -59,6 +59,13 @@ const SOURCES = [
       { name: 'Skyquake / Unexplained Boom Clusters', tier: 3, records: '~80', coverage: 'US', notes: 'Reported unexplained sonic booms; some military-confirmed' },
       { name: 'Indigenous Sacred Sites', tier: 3, records: '~100', coverage: 'US', notes: 'Context layer; intergenerational significance of locations' },
       { name: 'Solar Cycle Correlation Layer', tier: 3, records: 'Computed', coverage: 'Global/temporal', notes: 'SILSO sunspot data + UAP flap period cross-reference' },
+      { name: 'Aerospace / Defense Contractor Facilities', tier: 3, records: '~26', coverage: 'US', notes: 'Public HQ, test ranges, and labs (Skunk Works, Tonopah, Sandia, etc.). CONTROL layer — proximity is a human-tech confound, not anomaly evidence. Locations only; no patents, no individuals.' },
+    ],
+  },
+  {
+    group: 'Reference — Technosignature Surveys (not plotted as Earth anomalies)',
+    items: [
+      { name: 'VASCO — Vanishing & Appearing Sources', tier: 3, records: '~150 candidates', coverage: 'Celestial (sky)', notes: 'Villarroel et al. survey of stars that appear/vanish across a century of sky plates (incl. the 1952 Palomar nine-transient case). Positions are celestial (RA/Dec), so this is a cited reference, not a geographic map layer.' },
     ],
   },
 ];

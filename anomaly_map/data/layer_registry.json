@@ -153,6 +153,29 @@
       "fetch_script": null,
       "processed_file": "data/processed/black_budget_sites.geojson"
     },
+    "aerospace_facilities": {
+      "name": "Aerospace / Defense Contractor Facilities",
+      "tier": 3,
+      "confidence": 2,
+      "category": "infrastructure",
+      "description": "Public HQ, test ranges, and manufacturing sites of aerospace/defense contractors and government labs. CONTROL layer: proximity is a human-tech confound, not anomaly evidence. Locations only; no patents, no individuals.",
+      "fetch_script": null,
+      "processed_file": "data/processed/aerospace_facilities.geojson",
+      "is_control_layer": true,
+      "source_url": "https://en.wikipedia.org/wiki/Skunk_Works"
+    },
+    "vasco_observatories": {
+      "name": "VASCO Observation Sites (celestial — reference)",
+      "tier": 3,
+      "confidence": 1,
+      "category": "historical",
+      "description": "Ground observatories that recorded notable VASCO vanishing/appearing transient candidates. NOTE: the anomalies are celestial (RA/Dec) — these points mark the recording instrument, not an Earth anomaly. Reference/context only.",
+      "fetch_script": "scripts/fetch/fetch_vasco.py",
+      "processed_file": "data/processed/vasco_observatories.geojson",
+      "layer_number": 54,
+      "source_url": "https://vasconsite.wordpress.com/",
+      "is_control_layer": false
+    },
     "skyquakes": {
       "name": "Skyquake / Unexplained Boom Clusters",
       "tier": 2,
@@ -583,7 +606,8 @@
         "doe_grid",
         "epa_radnet",
         "nuclear_facilities",
-        "black_budget_sites"
+        "black_budget_sites",
+        "aerospace_facilities"
       ],
       "default_visible": false
     },
@@ -592,7 +616,8 @@
       "description": "Classified and aggregated datasets — behavioral taxonomy, periodicity, flap centroids",
       "layers": [
         "uap_behavioral_taxonomy",
-        "uap_flap_centroids"
+        "uap_flap_centroids",
+        "vasco_observatories"
       ],
       "default_visible": false
     },

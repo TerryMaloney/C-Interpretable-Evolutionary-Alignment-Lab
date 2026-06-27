@@ -91,6 +91,7 @@ SPRINTS = {
             "fetch_behavioral_taxonomy",# Layer 37: UAP behavioral taxonomy (9 categories)
             "fetch_foo_fighters",       # Layer 41: WWII Foo Fighter reports
             "fetch_operation_prato",    # Layer 47: Brazilian Operation Prato 1977
+            "fetch_vasco",              # Layer 54: VASCO observation sites (celestial reference)
         ],
     },
 }

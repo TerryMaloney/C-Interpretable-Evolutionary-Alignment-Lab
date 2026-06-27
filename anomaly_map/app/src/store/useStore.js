@@ -33,13 +33,13 @@ const LAYER_GROUPS = {
   },
   infrastructure_context: {
     label: 'Infrastructure Context',
-    layers: ['doe_grid', 'epa_radnet', 'nuclear_facilities', 'black_budget_sites'],
+    layers: ['doe_grid', 'epa_radnet', 'nuclear_facilities', 'black_budget_sites', 'aerospace_facilities'],
     defaultVisible: false,
     color: '#ff8844',
   },
   computed_derived: {
     label: 'Computed / Derived',
-    layers: ['uap_behavioral_taxonomy', 'uap_flap_centroids'],
+    layers: ['uap_behavioral_taxonomy', 'uap_flap_centroids', 'vasco_observatories'],
     defaultVisible: false,
     color: '#cc88ff',
   },
