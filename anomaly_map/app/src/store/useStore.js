@@ -193,6 +193,16 @@ export const useStore = create(
     sortMode: 'convergence',  // convergence | residual | confounded | low_report | physical
     activePreset: null,        // id of active investigation preset, or null
 
+    // ── Alignment overlay (spatial "ley line" detection + null test) ───────────
+    showAlignments: false,
+    showAlignmentControl: false,  // negative-control overlay (random null realization)
+    alignmentData: null,          // alignments.geojson
+    alignmentControlData: null,   // alignments_control.geojson
+    bearingData: null,            // alignment_bearings.json (orientation rose)
+
+    // ── Time-slider animation ──────────────────────────────────────────────────
+    timeFilter: { enabled: false, current: null, window: 5 },  // window = trailing years
+
     // ── Filters ───────────────────────────────────────────────────────────────
     filters: {
       minConfidence: 1,
@@ -235,6 +245,14 @@ export const useStore = create(
     })),
 
     setConvergenceData: (data) => set({ convergenceData: data }),
+
+    setShowAlignments: (show) => set({ showAlignments: show }),
+    setShowAlignmentControl: (show) => set({ showAlignmentControl: show }),
+    setAlignmentData: (data) => set({ alignmentData: data }),
+    setAlignmentControlData: (data) => set({ alignmentControlData: data }),
+    setBearingData: (data) => set({ bearingData: data }),
+
+    setTimeFilter: (patch) => set(state => ({ timeFilter: { ...state.timeFilter, ...patch } })),
 
     setDbReady: (ready) => set({ dbReady: ready }),
 

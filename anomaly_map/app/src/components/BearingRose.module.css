@@ -1,0 +1,35 @@
+.card {
+  position: absolute;
+  bottom: 24px;
+  left: calc(var(--panel-width, 340px) + 16px);
+  z-index: 20;
+  background: rgba(18, 18, 26, 0.92);
+  border: 1px solid var(--border, #2a2a3e);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.title {
+  font-size: 0.72rem;
+  color: var(--accent-cyan, #00d4ff);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.empty {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #9090a8);
+  max-width: 150px;
+  line-height: 1.5;
+}
+
+.svg { display: block; }
+
+.ring { fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 1; }
+.axis { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; }
+.spoke { stroke: #ff6a3c; stroke-width: 2.5; stroke-linecap: round; opacity: 0.85; }
+.hub { fill: var(--accent-cyan, #00d4ff); }
+.cardinal { fill: var(--text-muted, #606078); font-size: 9px; font-family: var(--font-mono); }

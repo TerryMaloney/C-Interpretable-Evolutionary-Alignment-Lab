@@ -89,6 +89,29 @@ export function cScoreToColor(score, maxScore = 10) {
   }
 }
 
+// Color for an alignment line. Significant (low p) renders hot + bold; chance-level
+// alignments render faint + washed-out — so an honestly-debunked "ley line" literally
+// looks unconvincing on the map.
+export function alignmentColor(pValue = 1, significant = false) {
+  const strength = Math.max(0, Math.min(1, 1 - pValue));  // 0 = chance, 1 = strong signal
+  if (significant) {
+    return [255, Math.round(140 - strength * 140), 30, 235];   // orange → red, bold
+  }
+  return [120, 160, 180, 70];                                  // faint blue-grey
+}
+
+// Pixel width for an alignment line, scaled by member count.
+export function alignmentWidth(pointCount = 0) {
+  return Math.min(9, 1.5 + pointCount / 3);
+}
+
+// Extract a 4-digit year from an ISO-ish datetime string. Returns null if absent.
+export function parseYear(dt) {
+  if (!dt) return null;
+  const m = /(-?\d{4})/.exec(String(dt));
+  return m ? parseInt(m[1], 10) : null;
+}
+
 export const ZONE_COLORS = {
   A: [255, 100, 80],
   B: [80, 160, 255],

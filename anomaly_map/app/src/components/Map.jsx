@@ -1,11 +1,14 @@
 import React, { useMemo, useCallback } from 'react';
 import DeckGL from '@deck.gl/react';
-import { ScatterplotLayer, HeatmapLayer } from '@deck.gl/aggregation-layers';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { HeatmapLayer } from '@deck.gl/aggregation-layers';
+import { GeoJsonLayer, LineLayer, ScatterplotLayer } from '@deck.gl/layers';
 import { Map as MapLibre } from '@vis.gl/react-maplibre';
 import maplibregl from 'maplibre-gl';
 import { useStore, MAP_VIEWS } from '../store/useStore.js';
-import { buildFlatFeatures, cScoreToColor, getCategoryColor } from '../utils/layers.js';
+import {
+  buildFlatFeatures, cScoreToColor, getCategoryColor,
+  alignmentColor, alignmentWidth, parseYear,
+} from '../utils/layers.js';
 import styles from './Map.module.css';
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
@@ -15,13 +18,27 @@ export default function Map() {
     viewState, setViewState,
     mapView, visibleLayers, layerData, registry,
     convergenceData, showCScoreOverlay,
+    showAlignments, alignmentData, showAlignmentControl, alignmentControlData,
+    timeFilter,
     selectFeature, hoverFeature, hoveredFeature,
   } = useStore();
 
   // Build flat point features for all visible layers
-  const flatFeatures = useMemo(() => {
+  const allFlatFeatures = useMemo(() => {
     return buildFlatFeatures(layerData, visibleLayers, registry);
   }, [layerData, visibleLayers, registry]);
+
+  // Apply the time-slider window (trailing `window` years up to `current`).
+  // Points without a parseable datetime are hidden while the filter is active.
+  const flatFeatures = useMemo(() => {
+    if (!timeFilter?.enabled || timeFilter.current == null) return allFlatFeatures;
+    const hi = timeFilter.current;
+    const lo = hi - (timeFilter.window ?? 5);
+    return allFlatFeatures.filter(f => {
+      const y = parseYear(f.properties?.datetime);
+      return y != null && y > lo && y <= hi;
+    });
+  }, [allFlatFeatures, timeFilter]);
 
   // Build convergence score features
   const convergenceFeatures = useMemo(() => {
@@ -121,10 +138,51 @@ export default function Map() {
       }
     }
 
+    // Negative-control overlay (one random null realization) — drawn first, muted,
+    // so the real alignments sit on top. If these look just as convincing, that's
+    // the point being made.
+    if (showAlignments && showAlignmentControl && alignmentControlData?.features?.length) {
+      result.push(
+        new LineLayer({
+          id: 'alignments-control',
+          data: alignmentControlData.features,
+          getSourcePosition: f => f.geometry.coordinates[0],
+          getTargetPosition: f => f.geometry.coordinates[1],
+          getColor: [150, 150, 160, 60],
+          getWidth: 1.5,
+          widthUnits: 'pixels',
+          pickable: false,
+        })
+      );
+    }
+
+    // Spatial alignment overlay — significance drives color (hot/bold = survives the
+    // null test; faint = consistent with chance).
+    if (showAlignments && alignmentData?.features?.length) {
+      result.push(
+        new LineLayer({
+          id: 'alignments',
+          data: alignmentData.features,
+          getSourcePosition: f => f.geometry.coordinates[0],
+          getTargetPosition: f => f.geometry.coordinates[1],
+          getColor: f => alignmentColor(f.properties?.p_value ?? 1, f.properties?.significant),
+          getWidth: f => alignmentWidth(f.properties?.point_count ?? 0),
+          widthUnits: 'pixels',
+          pickable: true,
+          autoHighlight: true,
+          highlightColor: [255, 255, 255, 160],
+          onClick: onFeatureClick,
+          onHover: onFeatureHover,
+          updateTriggers: { getColor: [alignmentData], getWidth: [alignmentData] },
+        })
+      );
+    }
+
     return result;
   }, [
     mapView, flatFeatures, convergenceFeatures,
     showCScoreOverlay, visibleLayers, layerData,
+    showAlignments, alignmentData, showAlignmentControl, alignmentControlData,
     onFeatureClick, onFeatureHover,
   ]);
 
@@ -145,6 +203,19 @@ export default function Map() {
           }
           const p = object.properties;
           if (!p) return null;
+          // Alignment line tooltip
+          if (p.point_count !== undefined && p.p_value !== undefined) {
+            const verdict = p.significant
+              ? '<span style="color:#ff6a3c">survives null test</span>'
+              : '<span style="color:#7fb0c4">consistent with chance</span>';
+            const flags = (p.confound_flags && p.confound_flags.length)
+              ? `<br/>confounds: ${p.confound_flags.join(', ')}` : '';
+            return {
+              html: `<b>Alignment — ${p.point_count} points</b><br/>p = ${p.p_value} · ${verdict}`
+                + `<br/>${p.length_km} km · bearing ${p.bearing_deg}°${flags}`,
+              style: { background: '#12121a', border: '1px solid #2a2a3e', color: '#e0e0e0', fontSize: '12px', maxWidth: '280px' },
+            };
+          }
           return {
             html: `<b>${p.layer}</b><br/>${(p.notes || '').slice(0, 120)}${p.notes?.length > 120 ? '…' : ''}`,
             style: { background: '#12121a', border: '1px solid #2a2a3e', color: '#e0e0e0', fontSize: '12px', maxWidth: '280px' },

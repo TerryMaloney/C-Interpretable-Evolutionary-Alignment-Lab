@@ -30,6 +30,8 @@ export default function MapHeader() {
   const {
     mapView, setMapView, setViewState,
     showCScoreOverlay, setShowCScoreOverlay,
+    showAlignments, setShowAlignments,
+    showAlignmentControl, setShowAlignmentControl,
     sortMode, setSortMode,
   } = useStore();
 
@@ -92,6 +94,24 @@ export default function MapHeader() {
       >
         ⬡ C-Score
       </button>
+
+      <button
+        className={`${styles.overlayToggle} ${showAlignments ? styles.active : ''}`}
+        onClick={() => setShowAlignments(!showAlignments)}
+        title="Toggle spatial alignment detection. Bold/hot = survives the null test; faint = consistent with chance."
+      >
+        ⟋ Alignments
+      </button>
+
+      {showAlignments && (
+        <button
+          className={`${styles.overlayToggle} ${showAlignmentControl ? styles.active : ''}`}
+          onClick={() => setShowAlignmentControl(!showAlignmentControl)}
+          title="Negative control: 'alignments' found in randomized points. If these look just as convincing, the real ones aren't special."
+        >
+          🎲 Control
+        </button>
+      )}
 
       <button
         className={`${styles.nearMeBtn} ${position ? styles.active : ''}`}

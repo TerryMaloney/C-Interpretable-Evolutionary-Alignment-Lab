@@ -40,6 +40,11 @@ function serializeState(state) {
   if (dateRange[1]) p.set('to', dateRange[1]);
 
   if (state.showCScoreOverlay) p.set('cscore', '1');
+  if (state.showAlignments) p.set('align', '1');
+  if (state.showAlignmentControl) p.set('alignctrl', '1');
+  if (state.timeFilter?.enabled && state.timeFilter.current != null) {
+    p.set('t', state.timeFilter.current);
+  }
   if (state.activeZone) p.set('zone', state.activeZone);
   if (state.selectedFeature?.properties?.id) {
     p.set('feat', state.selectedFeature.properties.id);
@@ -85,6 +90,10 @@ function applyParams(params, store) {
   if (from || to) store.updateFilter('dateRange', [from || null, to || null]);
 
   if (params.get('cscore') === '1') store.setShowCScoreOverlay(true);
+  if (params.get('align') === '1') store.setShowAlignments(true);
+  if (params.get('alignctrl') === '1') store.setShowAlignmentControl(true);
+  const tYear = parseInt(params.get('t'), 10);
+  if (!isNaN(tYear)) store.setTimeFilter({ enabled: true, current: tYear });
 
   const zone = params.get('zone');
   if (zone) store.setActiveZone(zone);
@@ -122,6 +131,9 @@ export function useUrlSync() {
         convergenceRadius: state.convergenceRadius,
         filters: state.filters,
         showCScoreOverlay: state.showCScoreOverlay,
+        showAlignments: state.showAlignments,
+        showAlignmentControl: state.showAlignmentControl,
+        timeFilter: state.timeFilter,
         activeZone: state.activeZone,
         selectedFeature: state.selectedFeature,
         sortMode: state.sortMode,

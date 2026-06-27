@@ -6,12 +6,17 @@ import LayerPanel from '../components/LayerPanel.jsx';
 import DetailPanel from '../components/DetailPanel.jsx';
 import MapHeader from '../components/MapHeader.jsx';
 import PresetsPanel from '../components/PresetsPanel.jsx';
+import TimeSlider from '../components/TimeSlider.jsx';
+import BearingRose from '../components/BearingRose.jsx';
 import LoadingOverlay from '../components/LoadingOverlay.jsx';
 import styles from './MapPage.module.css';
 
 const DATA_BASE = '/data/processed';
 const REGISTRY_PATH = '/data/layer_registry.json';
 const CONVERGENCE_PATH = '/output/analysis/convergence_scores.geojson';
+const ALIGNMENTS_PATH = '/output/analysis/alignments.geojson';
+const ALIGNMENT_CONTROL_PATH = '/output/analysis/alignments_control.geojson';
+const BEARINGS_PATH = '/output/analysis/alignment_bearings.json';
 
 const LOGIC_REMINDERS = [
   'A hotspot is a question, not an answer.',
@@ -49,6 +54,7 @@ function RotatingReminder() {
 export default function MapPage() {
   const {
     setRegistry, setLayerData, setConvergenceData,
+    setAlignmentData, setAlignmentControlData, setBearingData,
     setLoading, visibleLayers, layerData,
   } = useStore();
 
@@ -90,6 +96,18 @@ export default function MapPage() {
       .catch(() => {});
   }, [setConvergenceData]);
 
+  // Load alignment analysis (lines, negative control, bearing rose) — all optional
+  useEffect(() => {
+    const grab = (url, setter) =>
+      fetch(url)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(setter)
+        .catch(() => {});
+    grab(ALIGNMENTS_PATH, setAlignmentData);
+    grab(ALIGNMENT_CONTROL_PATH, setAlignmentControlData);
+    grab(BEARINGS_PATH, setBearingData);
+  }, [setAlignmentData, setAlignmentControlData, setBearingData]);
+
   const handleShare = () => {
     copyShareUrl();
     setCopied(true);
@@ -120,8 +138,11 @@ export default function MapPage() {
       <div className={styles.body}>
         <LayerPanel />
         <Map />
+        <BearingRose />
         <DetailPanel />
       </div>
+
+      <TimeSlider />
 
       <LoadingOverlay />
     </div>
