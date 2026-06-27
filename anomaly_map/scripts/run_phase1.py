@@ -151,7 +151,7 @@ def main():
                 log.info(f"    {step}")
         log.info(f"\n  Masks: {', '.join(MASK_STEPS)}")
         log.info("\n  Process: geocode_manual, normalize_all, merge_layers")
-        log.info("  Analyze: population_control, clustering, correlation")
+        log.info("  Analyze: population_control, clustering, correlation, convergence_score, alignments, ripleys_k")
         log.info("  Viz: generate_map")
         return
 
@@ -207,6 +207,7 @@ def main():
         from scripts.analyze import population_control
         from scripts.analyze import clustering
         from scripts.analyze import correlation
+        from scripts.analyze import convergence_score
         from scripts.analyze import alignments
         from scripts.analyze import ripleys_k
 
@@ -214,6 +215,7 @@ def main():
             ("population_control", population_control.main),
             ("clustering", clustering.main),
             ("correlation", correlation.main),
+            ("convergence_score", convergence_score.main),  # builds convergence_scores.geojson (C-Score + penalties)
             ("alignments", alignments.main),
             ("ripleys_k", ripleys_k.main),
         ]
