@@ -57,6 +57,14 @@ TIER_WEIGHTS = {1: 1.0, 2: 0.6, 3: 0.3}
 # Military masking penalty (inside SUA → × 0.6, i.e. penalty = 0.4)
 MILITARY_PENALTY = 0.4
 
+# Human-tech (aerospace/defense facility) proximity penalty (× 0.7, i.e. penalty = 0.3).
+# A cluster sitting on a contractor test range is more likely secret human tech than
+# off-world, so down-weight it. This is Gemini's "human-tech baseline" control, and it
+# matches the project's documented industrial penalty (×0.7).
+INDUSTRIAL_PENALTY = 0.3
+FACILITY_RADIUS_KM = 30.0
+FACILITY_LAYER = "aerospace_facilities"
+
 # Hard C-Score ceiling
 CSCORE_MAX = 10.0
 
@@ -216,6 +224,35 @@ def load_sua_polygons(layers_dir: Path) -> list[dict]:
         return []
 
 
+def load_facility_points(layers_dir: Path) -> list[tuple[float, float]]:
+    """Load aerospace/defense facility points for the human-tech proximity penalty."""
+    path = layers_dir / f"{FACILITY_LAYER}.geojson"
+    if not path.exists():
+        log.info("Aerospace facilities layer not found — human-tech masking disabled")
+        return []
+    try:
+        gj = load_geojson(path)
+        pts = []
+        for feat in gj.get("features", []):
+            c = feat.get("geometry", {}).get("coordinates", [])
+            if len(c) >= 2:
+                pts.append((float(c[1]), float(c[0])))  # (lat, lon)
+        log.info(f"Loaded {len(pts)} aerospace-facility points for human-tech masking")
+        return pts
+    except Exception as exc:
+        log.warning(f"Could not load facility points: {exc}")
+        return []
+
+
+def near_facility(lat: float, lon: float, facility_points: list[tuple[float, float]],
+                  radius_km: float = FACILITY_RADIUS_KM) -> tuple[bool, Optional[float]]:
+    """Return (is_near, nearest_km) for the closest aerospace/defense facility."""
+    if not facility_points:
+        return False, None
+    nearest = min(haversine_km(lat, lon, flat, flon) for flat, flon in facility_points)
+    return nearest <= radius_km, round(nearest, 1)
+
+
 def load_population_corrections(analysis_dir: Path) -> dict[str, dict]:
     """
     Load all population_corrected_<layer>.json files.
@@ -328,12 +365,13 @@ def compute_cscore(
     sua_features: list[dict],
     pop_corrections: dict[str, dict],
     radius_km: float = RADIUS_KM,
-) -> tuple[float, list[dict], dict, dict]:
+    facility_points: Optional[list[tuple[float, float]]] = None,
+) -> tuple[float, list[dict], dict, dict, dict]:
     """
     Compute the C-Score for a single grid cell.
 
     Returns:
-        (c_score, layers_present, pop_info, military_info)
+        (c_score, layers_present, pop_info, military_info, industrial_info)
     """
     registry_layers = registry.get("layers", {})
     zones = registry.get("zones_of_interest", {})
@@ -344,6 +382,8 @@ def compute_cscore(
     best_pop_z = None
 
     for layer_name, pts in layer_events.items():
+        if layer_name == FACILITY_LAYER:
+            continue  # control layer — applied as a penalty below, not a positive contributor
         meta = registry_layers.get(layer_name, {})
         tier = meta.get("tier", 3)
         weight = TIER_WEIGHTS.get(tier, 0.3)
@@ -375,8 +415,9 @@ def compute_cscore(
                 pop_info = pcell
                 best_pop_z = pcell["z_score"]
 
+    empty_industrial = {"near_facility": False, "penalty_applied": 0.0, "nearest_km": None}
     if not layers_present:
-        return 0.0, [], pop_info, {"inside_sua": False, "penalty_applied": 0.0}
+        return 0.0, [], pop_info, {"inside_sua": False, "penalty_applied": 0.0}, empty_industrial
 
     # ── Military masking ──────────────────────────────────────────────────────
     inside_sua = is_inside_sua(cell_lat, cell_lon, sua_features) if sua_features else False
@@ -386,17 +427,26 @@ def compute_cscore(
         "penalty_applied": round(military_penalty, 4),
     }
 
+    # ── Human-tech (aerospace/defense facility) masking ───────────────────────
+    near, nearest_km = near_facility(cell_lat, cell_lon, facility_points or [])
+    industrial_penalty = INDUSTRIAL_PENALTY if near else 0.0
+    industrial_info = {
+        "near_facility": near,
+        "penalty_applied": round(industrial_penalty, 4),
+        "nearest_km": nearest_km,
+    }
+
     # ── Final score (scale to 0-10) ───────────────────────────────────────────
     # Maximum theoretic weighted sum = number of layers × max_weight (1.0) × max_pop_factor (2.0)
     max_possible = len(layer_events) * TIER_WEIGHTS[1] * 2.0
     if max_possible <= 0:
-        return 0.0, layers_present, pop_info, military_info
+        return 0.0, layers_present, pop_info, military_info, industrial_info
 
-    raw_score = weighted_sum * (1.0 - military_penalty)
+    raw_score = weighted_sum * (1.0 - military_penalty) * (1.0 - industrial_penalty)
     c_score = min(CSCORE_MAX, (raw_score / max_possible) * CSCORE_MAX * 2.5)
     c_score = round(c_score, 4)
 
-    return c_score, layers_present, pop_info, military_info
+    return c_score, layers_present, pop_info, military_info, industrial_info
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -429,14 +479,16 @@ def get_cscore_for_point(
     layer_events = load_layer_events(layers_dir)
     sua_features = load_sua_polygons(layers_dir)
     pop_corrections = load_population_corrections(ANALYSIS_DIR)
+    facility_points = load_facility_points(layers_dir)
 
-    c_score, _, _, _ = compute_cscore(
+    c_score, _, _, _, _ = compute_cscore(
         lat, lon,
         layer_events=layer_events,
         registry=registry,
         sua_features=sua_features,
         pop_corrections=pop_corrections,
         radius_km=radius_km,
+        facility_points=facility_points,
     )
     return c_score
 
@@ -455,6 +507,9 @@ def main():
 
     log.info("\nLoading FAA SUA polygons…")
     sua_features = load_sua_polygons(LAYERS_DIR)
+
+    log.info("\nLoading aerospace-facility points (human-tech masking)…")
+    facility_points = load_facility_points(LAYERS_DIR)
 
     log.info("\nLoading population correction data…")
     pop_corrections = load_population_corrections(ANALYSIS_DIR)
@@ -476,13 +531,14 @@ def main():
         if idx > 0 and idx % 500 == 0:
             log.info(f"  {idx}/{len(grid_cells)} cells processed…")
 
-        c_score, layers_present, pop_info, military_info = compute_cscore(
+        c_score, layers_present, pop_info, military_info, industrial_info = compute_cscore(
             cell_lat, cell_lon,
             layer_events=layer_events,
             registry=registry,
             sua_features=sua_features,
             pop_corrections=pop_corrections,
             radius_km=RADIUS_KM,
+            facility_points=facility_points,
         )
 
         if c_score == 0.0 and not layers_present:
@@ -499,6 +555,7 @@ def main():
             "layers_present": layers_present,
             "population_correction": pop_info,
             "military_masking": military_info,
+            "industrial_masking": industrial_info,
             "geology_notes": geo_note,
             "nearest_zone": zone_id,
         })
@@ -552,6 +609,7 @@ def main():
             "layers_present": r["layers_present"],
             "population_correction": r["population_correction"],
             "military_masking": r["military_masking"],
+            "industrial_masking": r["industrial_masking"],
             "geology_notes": r["geology_notes"],
             "nearest_zone": r["nearest_zone"],
         })
@@ -598,6 +656,10 @@ def main():
         },
         "military_masking": {
             "cells_inside_sua": int(sum(1 for r in results if r["military_masking"]["inside_sua"])),
+        },
+        "human_tech_masking": {
+            "cells_near_facility": int(sum(1 for r in results if r["industrial_masking"]["near_facility"])),
+            "facility_count": len(facility_points),
         },
         "top_zone": top_zones[0] if top_zones else None,
     }
