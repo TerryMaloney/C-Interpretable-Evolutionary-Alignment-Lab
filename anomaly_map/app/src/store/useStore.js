@@ -139,12 +139,15 @@ export const INVESTIGATION_PRESETS = {
   },
 };
 
+// High-N layers that would visually swamp the map if on by default (still toggleable).
+const NEVER_DEFAULT_VISIBLE = new Set(['water_wells']);
+
 // Build initial visible-layers set from defaults
 const buildDefaultVisible = () => {
   const visible = new Set();
   for (const [, group] of Object.entries(LAYER_GROUPS)) {
     if (group.defaultVisible) {
-      group.layers.forEach(l => visible.add(l));
+      group.layers.forEach(l => { if (!NEVER_DEFAULT_VISIBLE.has(l)) visible.add(l); });
     }
   }
   return visible;

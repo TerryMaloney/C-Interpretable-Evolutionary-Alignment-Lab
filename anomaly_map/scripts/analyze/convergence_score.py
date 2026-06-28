@@ -65,6 +65,13 @@ INDUSTRIAL_PENALTY = 0.3
 FACILITY_RADIUS_KM = 30.0
 FACILITY_LAYER = "aerospace_facilities"
 
+# High-N context / control layers excluded from the positive C-Score. They are
+# near-ubiquitous (wells, traffic, mines are everywhere), so counting them would make
+# every cell look "convergent" and drowns the real anomaly signal. Excluding water_wells
+# also takes the grid pass from ~17 min to seconds.
+CONTEXT_LAYERS = {FACILITY_LAYER, "water_wells", "adsb_traffic", "usgs_mines",
+                  "nighttime_lights", "space_weather"}
+
 # Hard C-Score ceiling
 CSCORE_MAX = 10.0
 
@@ -382,8 +389,8 @@ def compute_cscore(
     best_pop_z = None
 
     for layer_name, pts in layer_events.items():
-        if layer_name == FACILITY_LAYER:
-            continue  # control layer — applied as a penalty below, not a positive contributor
+        if layer_name in CONTEXT_LAYERS:
+            continue  # context/control layers don't add to the positive score (facility is a penalty)
         meta = registry_layers.get(layer_name, {})
         tier = meta.get("tier", 3)
         weight = TIER_WEIGHTS.get(tier, 0.3)
@@ -437,8 +444,9 @@ def compute_cscore(
     }
 
     # ── Final score (scale to 0-10) ───────────────────────────────────────────
-    # Maximum theoretic weighted sum = number of layers × max_weight (1.0) × max_pop_factor (2.0)
-    max_possible = len(layer_events) * TIER_WEIGHTS[1] * 2.0
+    # Normalise against the layers that can actually contribute (exclude context layers).
+    n_scored = sum(1 for l in layer_events if l not in CONTEXT_LAYERS)
+    max_possible = max(1, n_scored) * TIER_WEIGHTS[1] * 2.0
     if max_possible <= 0:
         return 0.0, layers_present, pop_info, military_info, industrial_info
 

@@ -9,20 +9,25 @@ export default function HotspotsList() {
   const { convergenceData, setViewState, selectFeature, sortMode } = useStore();
   const [expanded, setExpanded] = useState(true);
 
+  // convergence_scores.geojson uses snake_case props (c_score, layer_count, nearest_zone).
+  // "Noise" is derived from whether a cell sits under a confound mask.
+  const noiseOf = (p) =>
+    (p?.military_masking?.inside_sua || p?.industrial_masking?.near_facility) ? 'High' : 'Low';
+
   const hotspots = useMemo(() => {
     if (!convergenceData?.features?.length) return [];
 
     return [...convergenceData.features]
-      .filter(f => f.properties?.cScore > 0)
+      .filter(f => (f.properties?.c_score ?? 0) > 0)
       .sort((a, b) => {
         const ap = a.properties, bp = b.properties;
         if (sortMode === 'residual') {
-          // Sort by cScore minus noise proxy
-          const aR = ap.cScore * (ap.noiseLabel === 'Low' ? 1 : ap.noiseLabel === 'Medium' ? 0.6 : 0.3);
-          const bR = bp.cScore * (bp.noiseLabel === 'Low' ? 1 : bp.noiseLabel === 'Medium' ? 0.6 : 0.3);
+          // Penalise cells that sit under a confound mask
+          const aR = ap.c_score * (noiseOf(ap) === 'Low' ? 1 : 0.4);
+          const bR = bp.c_score * (noiseOf(bp) === 'Low' ? 1 : 0.4);
           return bR - aR;
         }
-        return bp.cScore - ap.cScore;
+        return bp.c_score - ap.c_score;
       })
       .slice(0, 10);
   }, [convergenceData, sortMode]);
@@ -60,16 +65,17 @@ export default function HotspotsList() {
           {hotspots.map((feature, i) => {
             const p = feature.properties || {};
             const [lon, lat] = feature.geometry?.coordinates || [0, 0];
-            const label = cScoreLabel(p.cScore);
-            const noiseColor = NOISE_COLOR[p.noiseLabel] || '#888';
-            const zoneSlug = p.zone_slug;
+            const label = cScoreLabel(p.c_score);
+            const noiseLabel = noiseOf(p);
+            const noiseColor = NOISE_COLOR[noiseLabel] || '#888';
+            const zoneSlug = p.nearest_zone;
 
             return (
               <button
                 key={i}
                 className={styles.hotspotRow}
                 onClick={() => flyTo(feature)}
-                title={`${lat.toFixed(3)}, ${lon.toFixed(3)} — C-Score ${p.cScore?.toFixed(2)}`}
+                title={`${lat.toFixed(3)}, ${lon.toFixed(3)} — C-Score ${p.c_score?.toFixed(2)}`}
               >
                 <span className={styles.rank}>#{i + 1}</span>
                 <div className={styles.hotspotInfo}>
@@ -78,12 +84,10 @@ export default function HotspotsList() {
                     {zoneSlug && <span className={styles.zoneTag}>{zoneSlug}</span>}
                   </div>
                   <div className={styles.hotspotMeta}>
-                    <span className={styles.layers}>{p.layerCount ?? '?'} layers</span>
-                    {p.noiseLabel && (
-                      <span className={styles.noise} style={{ color: noiseColor }}>
-                        {p.noiseLabel} noise
-                      </span>
-                    )}
+                    <span className={styles.layers}>{p.layer_count ?? '?'} layers</span>
+                    <span className={styles.noise} style={{ color: noiseColor }}>
+                      {noiseLabel} noise
+                    </span>
                   </div>
                 </div>
                 <div className={styles.scoreCol}>
@@ -91,7 +95,7 @@ export default function HotspotsList() {
                     className={styles.cScore}
                     style={{ color: label?.color || '#fff' }}
                   >
-                    {p.cScore?.toFixed(1)}
+                    {p.c_score?.toFixed(1)}
                   </span>
                   <span className={styles.scoreTag}>C</span>
                 </div>

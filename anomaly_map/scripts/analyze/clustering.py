@@ -38,6 +38,8 @@ ANALYSIS_DIR = OUTPUT_DIR / "analysis"
 EPS_KM = 50        # Cluster radius in km
 MIN_SAMPLES = 5    # Minimum points to form a cluster
 EARTH_RADIUS_KM = 6371.0
+MAX_CLUSTER_POINTS = 5000  # cap per layer; the precomputed NxN haversine matrix is O(N^2)
+                           # (e.g. water_wells at 221k would need ~365 GB and crash the step)
 
 # Layers to include in cross-layer analysis (Tier 1 only for Phase 1)
 TIER1_LAYERS = ["nuforc", "noaa_ume", "usgs_seismic", "nuclear_facilities", "epa_radnet"]
@@ -153,6 +155,13 @@ def run_layer_clustering():
         if len(coords) < MIN_SAMPLES:
             log.info(f"  Too few records ({len(coords)}) — skipping")
             continue
+
+        if len(coords) > MAX_CLUSTER_POINTS:
+            n0 = len(coords)
+            idx = np.sort(np.random.default_rng(42).choice(n0, MAX_CLUSTER_POINTS, replace=False))
+            coords = coords[idx]
+            features = [features[i] for i in idx]
+            log.info(f"  Sampled {MAX_CLUSTER_POINTS} of {n0} points to bound the distance matrix")
 
         labels = run_dbscan(coords)
         result = summarize_clusters(labels, features, layer)

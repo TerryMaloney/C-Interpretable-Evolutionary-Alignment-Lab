@@ -93,7 +93,7 @@ def fetch_geipan_api():
     """Attempt to fetch from GEIPAN public API."""
     try:
         logger.info("Attempting GEIPAN API fetch...")
-        resp = fetch_with_retry(GEIPAN_API, params=GEIPAN_PARAMS, timeout=20)
+        resp = fetch_with_retry(GEIPAN_API, params=GEIPAN_PARAMS)
         if not resp:
             return []
 
@@ -132,14 +132,14 @@ def build_api_records(api_data):
                 layer=LAYER,
                 lat=lat,
                 lon=lon,
-                datetime=date or None,
+                datetime_str=date or None,
                 confidence=conf,
                 category="uap",
                 source="GEIPAN (CNES) official database",
                 notes=f"Cat {category}: {desc}".strip()
             )
-            rec["properties"]["geipan_category"] = category
-            rec["properties"]["investigated_by"] = "CNES GEIPAN"
+            rec["geipan_category"] = category
+            rec["investigated_by"] = "CNES GEIPAN"
             records.append(rec)
         except Exception:
             continue
@@ -153,16 +153,16 @@ def build_curated_records():
             layer=LAYER,
             lat=lat,
             lon=lon,
-            datetime=date,
+            datetime_str=date,
             confidence=conf,
             category="uap",
             source=f"GEIPAN Category {cat} — {location}",
             notes=notes
         )
-        rec["properties"]["geipan_category"] = cat
-        rec["properties"]["location_name"] = location
-        rec["properties"]["investigated_by"] = "CNES GEIPAN"
-        rec["properties"]["physical_evidence"] = cat == "D2"
+        rec["geipan_category"] = cat
+        rec["location_name"] = location
+        rec["investigated_by"] = "CNES GEIPAN"
+        rec["physical_evidence"] = cat == "D2"
         records.append(rec)
     return records
 
@@ -184,11 +184,11 @@ def main():
         logger.info(f"Using {len(curated)} curated GEIPAN records (API unavailable)")
     else:
         # Add curated D2 cases that may not be in API
-        d2_curated = [r for r in curated if r["properties"].get("physical_evidence")]
+        d2_curated = [r for r in curated if r.get("physical_evidence")]
         records.extend(d2_curated)
         logger.info(f"Supplemented with {len(d2_curated)} curated D2 physical-evidence cases")
 
-    gj = records_to_geojson(records, layer_id=LAYER, tier=1)
+    gj = records_to_geojson(records)
     save_geojson(gj, OUT_PATH)
     logger.info(f"Saved {len(records)} total records → {OUT_PATH}")
 

@@ -78,7 +78,7 @@ def fetch_community_csv():
     """Try to fetch community-processed Blue Book CSV, filter to relevant fields."""
     try:
         logger.info("Attempting community Blue Book CSV fetch...")
-        resp = fetch_with_retry(BB_CSV_URL, timeout=30)
+        resp = fetch_with_retry(BB_CSV_URL)
         if not resp:
             return []
         save_raw(resp.content, RAW_PATH)
@@ -118,7 +118,7 @@ def build_records_from_csv(csv_rows):
                 layer=LAYER,
                 lat=lat,
                 lon=lon,
-                datetime=dt,
+                datetime_str=dt,
                 confidence=0.70,
                 category="uap",
                 source="Project Blue Book via NICAP/community CSV",
@@ -137,16 +137,16 @@ def build_curated_records():
             layer=LAYER,
             lat=lat,
             lon=lon,
-            datetime=date,
+            datetime_str=date,
             confidence=conf,
             category="uap",
             source=f"Project Blue Book Official Unknown — {case_id} via NICAP",
             notes=f"{location}: {notes}"
         )
-        rec["properties"]["case_id"] = case_id
-        rec["properties"]["classification"] = "Official Unknown"
-        rec["properties"]["collection"] = "Project Blue Book"
-        rec["properties"]["collection_period"] = "1947-1969"
+        rec["case_id"] = case_id
+        rec["classification"] = "Official Unknown"
+        rec["collection"] = "Project Blue Book"
+        rec["collection_period"] = "1947-1969"
         records.append(rec)
     return records
 
@@ -166,7 +166,7 @@ def main():
     records.extend(curated)
     logger.info(f"Added {len(curated)} curated high-value Unknown cases")
 
-    gj = records_to_geojson(records, layer_id=LAYER, tier=2)
+    gj = records_to_geojson(records)
     save_geojson(gj, OUT_PATH)
     logger.info(f"Saved {len(records)} total records → {OUT_PATH}")
 

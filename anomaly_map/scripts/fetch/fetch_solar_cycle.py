@@ -151,7 +151,7 @@ def fetch_silso_data():
     """Fetch SILSO monthly sunspot number time series."""
     try:
         logger.info("Fetching SILSO monthly sunspot data...")
-        resp = fetch_with_retry(SILSO_URL, timeout=20)
+        resp = fetch_with_retry(SILSO_URL)
         if not resp:
             return []
 
@@ -226,16 +226,16 @@ def build_solar_cycle_records(monthly_data):
             layer=LAYER,
             lat=39.5,    # US centroid — this is a temporal/computed layer
             lon=-98.4,
-            datetime=dt,
+            datetime_str=dt,
             confidence=0.95,
             category="geophysical",
             source="SILSO WDC Royal Observatory Belgium",
             notes=f"SC{sc_num or '?'} month {year}-{month:02d}: SSN={ssn:.1f} ({phase})"
         )
-        rec["properties"]["sunspot_number"] = ssn
-        rec["properties"]["solar_cycle"] = sc_num
-        rec["properties"]["solar_phase"] = phase
-        rec["properties"]["solar_cycle_max"] = max_ssn
+        rec["sunspot_number"] = ssn
+        rec["solar_cycle"] = sc_num
+        rec["solar_phase"] = phase
+        rec["solar_cycle_max"] = max_ssn
         records.append(rec)
 
     return records
@@ -249,18 +249,18 @@ def build_flap_period_records():
             layer=LAYER,
             lat=flap["lat"],
             lon=flap["lon"],
-            datetime=flap["start"] + "-01",
+            datetime_str=flap["start"] + "-01",
             confidence=0.90,
             category="computed",
             source="NICAP / NUFORC flap documentation + SILSO solar data",
             notes=flap["notes"]
         )
-        rec["properties"]["flap_period"] = flap["period"]
-        rec["properties"]["solar_cycle"] = flap["solar_cycle"]
-        rec["properties"]["solar_phase_at_flap"] = flap["phase"]
-        rec["properties"]["estimated_ssn"] = flap["estimated_ssn"]
-        rec["properties"]["flap_start"] = flap["start"]
-        rec["properties"]["flap_end"] = flap["end"]
+        rec["flap_period"] = flap["period"]
+        rec["solar_cycle"] = flap["solar_cycle"]
+        rec["solar_phase_at_flap"] = flap["phase"]
+        rec["estimated_ssn"] = flap["estimated_ssn"]
+        rec["flap_start"] = flap["start"]
+        rec["flap_end"] = flap["end"]
         records.append(rec)
     return records
 
@@ -272,13 +272,13 @@ def build_solar_event_records():
             layer=LAYER,
             lat=lat,
             lon=lon,
-            datetime=date_str,
+            datetime_str=date_str,
             confidence=0.95,
             category="space_weather",
             source="NOAA NGDC Solar Event Catalog",
             notes=f"{event_name}: {notes}"
         )
-        rec["properties"]["solar_event"] = event_name
+        rec["solar_event"] = event_name
         records.append(rec)
     return records
 
@@ -354,7 +354,7 @@ def main():
     records.extend(solar_event_records)
     logger.info(f"Added {len(solar_event_records)} notable solar event records")
 
-    gj = records_to_geojson(records, layer_id=LAYER, tier=2)
+    gj = records_to_geojson(records)
     save_geojson(gj, OUT_PATH)
     logger.info(f"Saved {len(records)} total records → {OUT_PATH}")
 

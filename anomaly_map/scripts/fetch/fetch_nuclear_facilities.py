@@ -294,7 +294,7 @@ def geocode_nrc_reactors(reactors: list[dict]) -> list[dict]:
 
             query = f"{city}, {state}, USA" if city else f"{state}, USA"
             try:
-                location = geocoder.geocode(query, timeout=10)
+                location = geocoder.geocode(query)
                 time.sleep(1.1)  # Nominatim rate limit: 1 req/sec
             except GeocoderTimedOut:
                 location = None

@@ -99,12 +99,14 @@ def records_to_geojson(records: list[dict]) -> dict:
 
 
 def save_geojson(data: dict, path: Path) -> None:
+    path = Path(path)  # accept str or Path
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         json.dump(data, f, indent=2, default=str)
 
 
 def save_raw(data: bytes | str, path: Path) -> None:
+    path = Path(path)  # accept str or Path
     path.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(data, bytes) else "w"
     with open(path, mode) as f:

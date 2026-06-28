@@ -141,19 +141,19 @@ def build_records():
             layer=LAYER,
             lat=lat,
             lon=lon,
-            datetime=date_str,
+            datetime_str=date_str,
             confidence=conf,
             category="nuclear",
             source=f"Johnston Archive / ICAN / CTBTO — {country}",
             notes=f"{name} ({country}, {yield_kt:,.0f}kt): {notes}"
         )
-        rec["properties"]["test_name"] = name
-        rec["properties"]["country"] = country
-        rec["properties"]["test_site"] = site
-        rec["properties"]["yield_kt"] = yield_kt
-        rec["properties"]["yield_mt"] = round(yield_kt / 1000, 3)
-        rec["properties"]["is_megaton"] = yield_kt >= 1000
-        rec["properties"]["is_high_altitude"] = "altitude" in notes.lower() or "Starfish" in name
+        rec["test_name"] = name
+        rec["country"] = country
+        rec["test_site"] = site
+        rec["yield_kt"] = yield_kt
+        rec["yield_mt"] = round(yield_kt / 1000, 3)
+        rec["is_megaton"] = yield_kt >= 1000
+        rec["is_high_altitude"] = "altitude" in notes.lower() or "Starfish" in name
         records.append(rec)
 
     return records
@@ -164,7 +164,7 @@ def compute_temporal_correlation(records):
     # Monthly test counts
     monthly_counts = {}
     for rec in records:
-        dt = rec["properties"].get("datetime", "")
+        dt = rec.get("datetime", "")
         if dt and len(dt) >= 7:
             ym = dt[:7]
             monthly_counts[ym] = monthly_counts.get(ym, 0) + 1
@@ -216,14 +216,14 @@ def main():
     logger.info(f"Result: {correlation['interpretation']}")
     logger.info(f"Note: {correlation['note']}")
 
-    gj = records_to_geojson(records, layer_id=LAYER, tier=2)
+    gj = records_to_geojson(records)
     save_geojson(gj, OUT_PATH)
     logger.info(f"Saved {len(records)} records → {OUT_PATH}")
 
     # Summary by country
     by_country = {}
     for rec in records:
-        c = rec["properties"].get("country", "?")
+        c = rec.get("country", "?")
         by_country[c] = by_country.get(c, 0) + 1
     for country, count in sorted(by_country.items(), key=lambda x: -x[1]):
         logger.info(f"  {country}: {count} tests")
