@@ -299,11 +299,20 @@ def events_in_radius(
     points: list[tuple[float, float]],
     radius_km: float,
 ) -> int:
-    """Count how many (lat, lon) points fall within radius_km of the cell centroid."""
+    """Count how many (lat, lon) points fall within radius_km of the cell centroid.
+
+    Uses a cheap lat/lon bounding-box prefilter before the haversine call so the grid
+    pass stays fast even on high-N layers like NUFORC (~150k points)."""
     if not points:
         return 0
+    rad_deg = radius_km / 111.0
+    lon_deg = rad_deg / max(0.1, math.cos(math.radians(cell_lat)))
     count = 0
     for lat, lon in points:
+        if abs(lat - cell_lat) > rad_deg:
+            continue
+        if abs(lon - cell_lon) > lon_deg:
+            continue
         if haversine_km(cell_lat, cell_lon, lat, lon) <= radius_km:
             count += 1
     return count
