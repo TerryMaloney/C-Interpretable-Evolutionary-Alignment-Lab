@@ -41,6 +41,8 @@ anomaly_map/output/pmtiles/*.pmtiles
 anomaly_map/output/layers/*.geojson
 anomaly_map/output/analysis/*.json
 anomaly_map/output/analysis/*.geojson
+anomaly_map/output/combined.geojson
+anomaly_map/output/layer_manifest.json
 
 # OS
 .DS_Store
